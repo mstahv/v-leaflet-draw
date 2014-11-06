@@ -8,7 +8,6 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vaadin.version>7.2.6</vaadin.version>
-        <g-leaflet-draw.version>0.4.8-SNAPSHOT</g-leaflet-draw.version>
         <geotools.version>10.2</geotools.version>
     </properties>
 
@@ -304,12 +303,12 @@
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>v-leaflet</artifactId>
-            <version>0.6.0-SNAPSHOT</version>
+            <version>0.6.0</version>
         </dependency>
         <dependency>
             <groupId>org.peimari</groupId>
             <artifactId>g-leaflet-draw</artifactId>
-            <version>0.4.8-SNAPSHOT</version>
+            <version>0.4.8</version>
             <!-- Only needed during widgetset compilation, so provided scope would 
             be great for this, but with it is left out from widgetset compilation by 
             vaadin plugin -->
@@ -328,12 +327,6 @@
             <scope>provided</scope>
         </dependency>
         
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.3.2</version>
-        </dependency>
-
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-themes</artifactId>
@@ -397,14 +390,12 @@
         <!-- <scope>test</scope> -->
         <!-- </dependency> -->
 
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.10</version>
             <scope>test</scope>
         </dependency>
-        
 
     </dependencies>
 
