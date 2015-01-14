@@ -8,15 +8,7 @@ import org.peimari.gleaflet.client.Marker;
 import org.peimari.gleaflet.client.Polygon;
 import org.peimari.gleaflet.client.Polyline;
 import org.peimari.gleaflet.client.Rectangle;
-import org.peimari.gleaflet.client.draw.Draw;
-import org.peimari.gleaflet.client.draw.DrawControlOptions;
-import org.peimari.gleaflet.client.draw.LayerCreatedEvent;
-import org.peimari.gleaflet.client.draw.LayerCreatedListener;
-import org.peimari.gleaflet.client.draw.LayerType;
-import org.peimari.gleaflet.client.draw.LayersDeletedEvent;
-import org.peimari.gleaflet.client.draw.LayersDeletedListener;
-import org.peimari.gleaflet.client.draw.LayersEditedEvent;
-import org.peimari.gleaflet.client.draw.LayersEditedListener;
+import org.peimari.gleaflet.client.draw.*;
 import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
 import org.vaadin.addon.leaflet.client.AbstractControlConnector;
 import org.vaadin.addon.leaflet.client.AbstractLeafletLayerConnector;
@@ -47,7 +39,12 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 		final LeafletFeatureGroupConnector fgc = (LeafletFeatureGroupConnector) getState().featureGroup;
 		FeatureGroup layerGroup = (FeatureGroup) fgc.getLayer();
 		options.setEditableFeatureGroup(layerGroup);
-		Draw l = Draw.create(options);
+
+                DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.create();
+                buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
+                options.setDraw(buttonOptions);
+
+                Draw l = Draw.create(options);
 
 		getMap().addLayerCreatedListener(new LayerCreatedListener() {
 

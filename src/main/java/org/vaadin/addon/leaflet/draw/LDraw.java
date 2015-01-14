@@ -2,7 +2,7 @@ package org.vaadin.addon.leaflet.draw;
 
 import java.lang.reflect.Method;
 import java.util.EventObject;
-
+import java.util.Set;
 import org.vaadin.addon.leaflet.LCircle;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMarker;
@@ -191,5 +191,9 @@ public class LDraw extends AbstractControl {
 	public void setEditableFeatureGroup(LFeatureGroup group) {
 		getState().featureGroup = group;
 	}
+
+        public void setDrawVisibleButtons(Set<String> drawVisibleButtons) {
+            getState().drawVisibleButtons = drawVisibleButtons;
+        }
 
 }
