@@ -172,6 +172,7 @@
                         <releaseProfiles>release</releaseProfiles>
                         <goals>install assembly:single</goals>
                     </configuration>
+                    <version>2.5.2</version>
                 </plugin>
 
                 <!-- Compile widget set for integration testing -->
