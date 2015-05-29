@@ -15,9 +15,8 @@
  */
 package org.vaadin.addon.leaflet.draw.client;
 
-import org.vaadin.addon.leaflet.client.LeafletControlState;
-
 import com.vaadin.shared.Connector;
+import org.vaadin.addon.leaflet.shared.LeafletControlState;
 
 /**
  * 

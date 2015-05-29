@@ -1,8 +1,7 @@
 package org.vaadin.addon.leaflet.draw.client;
 
-import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
-
 import com.google.gwt.core.client.EntryPoint;
+import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
 
 public class EagerDrawLoader implements EntryPoint {
 
