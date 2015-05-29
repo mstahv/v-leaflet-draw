@@ -26,123 +26,127 @@ import org.vaadin.addon.leaflet.client.LeafletRectangleConnector;
 
 @Connect(LDraw.class)
 public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
-	static {
-		LeafletDrawResourceInjector.ensureInjected();
-	}
 
-	private LeafletDrawServerRcp rpc = RpcProxy.create(
-			LeafletDrawServerRcp.class, this);
+    static {
+        LeafletDrawResourceInjector.ensureInjected();
+    }
 
-	@Override
-	protected Draw createControl() {
-		DrawControlOptions options = DrawControlOptions.create();
-		final LeafletFeatureGroupConnector fgc = (LeafletFeatureGroupConnector) getState().featureGroup;
-		FeatureGroup layerGroup = (FeatureGroup) fgc.getLayer();
-		options.setEditableFeatureGroup(layerGroup);
+    private LeafletDrawServerRcp rpc = RpcProxy.create(
+            LeafletDrawServerRcp.class, this);
 
-                DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.create();
-                buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
-                options.setDraw(buttonOptions);
+    @Override
+    protected Draw createControl() {
+        DrawControlOptions options = DrawControlOptions.create();
+        final LeafletFeatureGroupConnector fgc = (LeafletFeatureGroupConnector) getState().featureGroup;
+        FeatureGroup layerGroup = (FeatureGroup) fgc.getLayer();
+        options.setEditableFeatureGroup(layerGroup);
 
-                Draw l = Draw.create(options);
+        DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.
+                create();
+        if (getState().drawVisibleButtons != null) {
+            buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
+        }
+        options.setDraw(buttonOptions);
 
-		getMap().addLayerCreatedListener(new LayerCreatedListener() {
+        Draw l = Draw.create(options);
 
-			@Override
-			public void onCreate(LayerCreatedEvent event) {
-				LayerType type = event.getLayerType();
-				/* type specific actions... */
-				switch (type) {
-				case marker:
-					Marker m = (Marker) event.getLayer();
-					rpc.markerDrawn(U.toPoint(m.getLatLng()));
-					return;
-				case circle:
-					Circle c = (Circle) event.getLayer();
-					rpc.circleDrawn(U.toPoint(c.getLatLng()), c.getRadius());
-					break;
-				case rectangle:
-					Rectangle r = (Rectangle) event.getLayer();
-					rpc.rectangleDrawn(U.toBounds(r.getBounds()));
-					break;
-				case polygon:
-					Polygon p = (Polygon) event.getLayer();
-					rpc.polygonDrawn(U.toPointArray(p.getLatLngs()));
-					break;
-				case polyline:
-					Polyline pl = (Polyline) event.getLayer();
-					rpc.polylineDrawn(U.toPointArray(pl.getLatLngs()));
-					break;
-				default:
-					break;
-				}
-			}
-		});
+        getMap().addLayerCreatedListener(new LayerCreatedListener() {
 
-		getMap().addLayersEditedListener(new LayersEditedListener() {
+            @Override
+            public void onCreate(LayerCreatedEvent event) {
+                LayerType type = event.getLayerType();
+                /* type specific actions... */
+                switch (type) {
+                    case marker:
+                        Marker m = (Marker) event.getLayer();
+                        rpc.markerDrawn(U.toPoint(m.getLatLng()));
+                        return;
+                    case circle:
+                        Circle c = (Circle) event.getLayer();
+                        rpc.circleDrawn(U.toPoint(c.getLatLng()), c.getRadius());
+                        break;
+                    case rectangle:
+                        Rectangle r = (Rectangle) event.getLayer();
+                        rpc.rectangleDrawn(U.toBounds(r.getBounds()));
+                        break;
+                    case polygon:
+                        Polygon p = (Polygon) event.getLayer();
+                        rpc.polygonDrawn(U.toPointArray(p.getLatLngs()));
+                        break;
+                    case polyline:
+                        Polyline pl = (Polyline) event.getLayer();
+                        rpc.polylineDrawn(U.toPointArray(pl.getLatLngs()));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
 
-			@Override
-			public void onEdit(LayersEditedEvent event) {
-				ILayer[] layers = event.getLayers().getLayers();
-				for (ILayer iLayer : layers) {
-					AbstractLeafletLayerConnector<?> c = fgc
-							.getConnectorFor(iLayer);
-					if (c != null) {
-						if (c instanceof LeafletMarkerConnector) {
-							LeafletMarkerConnector mc = (LeafletMarkerConnector) c;
-							rpc.markerModified(mc,
-									U.toPoint(((Marker) iLayer).getLatLng()));
-						} else if (c instanceof LeafletCircleConnector) {
-							LeafletCircleConnector cc = (LeafletCircleConnector) c;
-							Circle circle = (Circle) cc.getLayer();
-							rpc.circleModified(cc,
-									U.toPoint(circle.getLatLng()),
-									circle.getRadius());
-						} else if (c instanceof LeafletRectangleConnector) {
-							LeafletRectangleConnector rc = (LeafletRectangleConnector) c;
-							Rectangle polyline = (Rectangle) rc.getLayer();
-							rpc.rectangleModified(rc,
-									U.toBounds( polyline.getBounds()));
-						} else if (c instanceof LeafletPolylineConnector) {
-							// polygon also gets here
-							LeafletPolylineConnector plc = (LeafletPolylineConnector) c;
-							Polyline polyline = (Polyline) plc.getLayer();
-							rpc.polylineModified(plc,
-									U.toPointArray(polyline.getLatLngs()));
-						}
-					}
-				}
-			}
-		});
+        getMap().addLayersEditedListener(new LayersEditedListener() {
 
-		getMap().addLayersDeletedListener(new LayersDeletedListener() {
+            @Override
+            public void onEdit(LayersEditedEvent event) {
+                ILayer[] layers = event.getLayers().getLayers();
+                for (ILayer iLayer : layers) {
+                    AbstractLeafletLayerConnector<?> c = fgc
+                            .getConnectorFor(iLayer);
+                    if (c != null) {
+                        if (c instanceof LeafletMarkerConnector) {
+                            LeafletMarkerConnector mc = (LeafletMarkerConnector) c;
+                            rpc.markerModified(mc,
+                                    U.toPoint(((Marker) iLayer).getLatLng()));
+                        } else if (c instanceof LeafletCircleConnector) {
+                            LeafletCircleConnector cc = (LeafletCircleConnector) c;
+                            Circle circle = (Circle) cc.getLayer();
+                            rpc.circleModified(cc,
+                                    U.toPoint(circle.getLatLng()),
+                                    circle.getRadius());
+                        } else if (c instanceof LeafletRectangleConnector) {
+                            LeafletRectangleConnector rc = (LeafletRectangleConnector) c;
+                            Rectangle polyline = (Rectangle) rc.getLayer();
+                            rpc.rectangleModified(rc,
+                                    U.toBounds(polyline.getBounds()));
+                        } else if (c instanceof LeafletPolylineConnector) {
+                            // polygon also gets here
+                            LeafletPolylineConnector plc = (LeafletPolylineConnector) c;
+                            Polyline polyline = (Polyline) plc.getLayer();
+                            rpc.polylineModified(plc,
+                                    U.toPointArray(polyline.getLatLngs()));
+                        }
+                    }
+                }
+            }
+        });
 
-			@Override
-			public void onDelete(LayersDeletedEvent event) {
-				ILayer[] layers = event.getLayers().getLayers();
-				for (ILayer iLayer : layers) {
-					AbstractLeafletLayerConnector<?> c = fgc
-							.getConnectorFor(iLayer);
-					rpc.layerDeleted(c);
-				}
-			}
-		});
+        getMap().addLayersDeletedListener(new LayersDeletedListener() {
 
-		return l;
-	}
+            @Override
+            public void onDelete(LayersDeletedEvent event) {
+                ILayer[] layers = event.getLayers().getLayers();
+                for (ILayer iLayer : layers) {
+                    AbstractLeafletLayerConnector<?> c = fgc
+                            .getConnectorFor(iLayer);
+                    rpc.layerDeleted(c);
+                }
+            }
+        });
 
-	protected void doStateChange(StateChangeEvent stateChangeEvent) {
+        return l;
+    }
 
-	}
+    protected void doStateChange(StateChangeEvent stateChangeEvent) {
 
-	@Override
-	protected EditableMap getMap() {
-		return super.getMap().cast();
-	}
+    }
 
-	@Override
-	public LeafletDrawState getState() {
-		return (LeafletDrawState) super.getState();
-	}
+    @Override
+    protected EditableMap getMap() {
+        return super.getMap().cast();
+    }
+
+    @Override
+    public LeafletDrawState getState() {
+        return (LeafletDrawState) super.getState();
+    }
 
 }
