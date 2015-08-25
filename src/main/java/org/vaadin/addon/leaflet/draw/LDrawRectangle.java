@@ -7,4 +7,12 @@ package org.vaadin.addon.leaflet.draw;
  */
 public class LDrawRectangle extends LDrawPolygon {
 
+  public LDrawRectangle(LMap map) {
+    super(map);
+  }
+
+  public LDrawRectangle() {
+    super();
+  }
+
 }
