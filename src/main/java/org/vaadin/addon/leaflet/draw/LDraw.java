@@ -3,6 +3,8 @@ package org.vaadin.addon.leaflet.draw;
 import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Set;
+
+import org.vaadin.addon.leaflet.AbstractLeafletVector;
 import org.vaadin.addon.leaflet.LCircle;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMarker;
@@ -164,8 +166,14 @@ public class LDraw extends AbstractControl {
 
 			@Override
 			public void polylineModified(Connector plc, Point[] pointArray) {
-				LPolyline pl = (LPolyline) plc;
-				pl.setPoints(pointArray);
+				AbstractLeafletVector pl = null;
+				if (plc instanceof LPolyline) {
+					pl = (LPolyline) plc;
+					((LPolyline) pl).setPoints(pointArray);
+				} else if (plc instanceof LPolygon) {
+					pl = (LPolygon) plc;
+					((LPolygon) pl).setPoints(pointArray);
+				}
 				fireEvent(new FeatureModifiedEvent(LDraw.this, pl));
 			}
 
