@@ -1,8 +1,6 @@
 package org.vaadin.addon.leaflet.draw;
 
-import org.vaadin.addon.leaflet.AbstractLeafletVector;
-import org.vaadin.addon.leaflet.LCircle;
-import org.vaadin.addon.leaflet.LPolyline;
+import org.vaadin.addon.leaflet.*;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedListener;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawEditingServerRcp;
@@ -52,6 +50,14 @@ public class LEditing extends AbstractExtension {
 				LPolyline pl = (LPolyline) plc;
 				pl.setPoints(pointArray);
 				fireEvent(new FeatureModifiedEvent(LEditing.this, pl));
+				remove();
+			}
+			
+			@Override
+			public void polygonModified(Connector plc, Point[] pointArray) {
+			   	LPolygon pl = (LPolygon) plc;
+			   	pl.setPoints(pointArray);
+			   	fireEvent(new FeatureModifiedEvent(LEditing.this, pl));
 				remove();
 			}
 
