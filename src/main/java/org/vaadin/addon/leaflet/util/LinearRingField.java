@@ -15,6 +15,7 @@ import com.vividsolutions.jts.geom.LinearRing;
 public class LinearRingField extends AbstractJTSField<LinearRing> {
 
 	private LPolygon lPolygon;
+        private LDrawPolygon drawPolyline;
 
 	public LinearRingField() {
 	}
@@ -50,7 +51,14 @@ public class LinearRingField extends AbstractJTSField<LinearRing> {
 	}
 
 	protected void prepareDrawing() {
-		LDrawPolygon drawPolyline = new LDrawPolygon(map);
+	   	if(drawPolyline != null) {
+	   	   drawPolyline.remove();
+	   	}
+	   	if(lPolygon != null) {
+	   	   map.removeLayer(lPolygon);
+	   	   lPolygon = null;
+	   	}
+		drawPolyline = new LDrawPolygon(map);
 		drawPolyline.addFeatureDrawnListener(new FeatureDrawnListener() {
 
 			@Override

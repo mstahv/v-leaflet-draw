@@ -15,5 +15,9 @@ public interface LeafletDrawEditingServerRcp extends ServerRpc {
 	@Delayed(lastOnly=true)
 	public void polylineModified(Connector plc,
 			Point[] pointArray);
+	
+	@Delayed(lastOnly=true)
+	public void polygonModified(Connector plc,
+	      		Point[] pointArray);
 
 }

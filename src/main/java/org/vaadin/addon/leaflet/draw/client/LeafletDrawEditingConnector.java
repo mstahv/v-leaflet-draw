@@ -1,13 +1,8 @@
 package org.vaadin.addon.leaflet.draw.client;
 
-import org.peimari.gleaflet.client.Circle;
-import org.peimari.gleaflet.client.EditableFeature;
-import org.peimari.gleaflet.client.FeatureEditedListener;
-import org.peimari.gleaflet.client.Polyline;
+import org.peimari.gleaflet.client.*;
 import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
-import org.vaadin.addon.leaflet.client.AbstractLeafletLayerConnector;
-import org.vaadin.addon.leaflet.client.LeafletCircleConnector;
-import org.vaadin.addon.leaflet.client.U;
+import org.vaadin.addon.leaflet.client.*;
 import org.vaadin.addon.leaflet.draw.LEditing;
 
 import com.google.gwt.core.client.Scheduler;
@@ -50,8 +45,12 @@ public class LeafletDrawEditingConnector extends AbstractExtensionConnector {
 						if (c instanceof LeafletCircleConnector) {
 							Circle circle = (Circle) c.getLayer();
 							rpc.circleModified(c, U.toPoint(circle.getLatLng()), circle.getRadius());
+						} else if (c instanceof LeafletPolygonConnector) {
+						   	Polygon p = (Polygon) c.getLayer();
+						   	rpc.polygonModified(c,
+						   	      		U.toPointArray(p.getLatLngs()));
 						} else {
-							// Polyline/gon
+							// Polyline
 							Polyline p = (Polyline) c.getLayer();
 							rpc.polylineModified(c,
 									U.toPointArray(p.getLatLngs()));
