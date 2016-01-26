@@ -3,7 +3,7 @@ package org.vaadin.addon.leaflet.draw.client;
 import org.peimari.gleaflet.client.Circle;
 import org.peimari.gleaflet.client.EditableMap;
 import org.peimari.gleaflet.client.FeatureGroup;
-import org.peimari.gleaflet.client.ILayer;
+import org.peimari.gleaflet.client.Layer;
 import org.peimari.gleaflet.client.Marker;
 import org.peimari.gleaflet.client.Polygon;
 import org.peimari.gleaflet.client.Polyline;
@@ -22,6 +22,7 @@ import org.vaadin.addon.leaflet.draw.LDraw;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import org.vaadin.addon.leaflet.client.LeafletPolygonConnector;
 import org.vaadin.addon.leaflet.client.LeafletRectangleConnector;
 
 @Connect(LDraw.class)
@@ -71,7 +72,7 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                         break;
                     case polygon:
                         Polygon p = (Polygon) event.getLayer();
-                        rpc.polygonDrawn(U.toPointArray(p.getLatLngs()));
+                        rpc.polygonDrawn(U.toPointArray(p.getExteriorRing()));
                         break;
                     case polyline:
                         Polyline pl = (Polyline) event.getLayer();
@@ -87,8 +88,8 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 
             @Override
             public void onEdit(LayersEditedEvent event) {
-                ILayer[] layers = event.getLayers().getLayers();
-                for (ILayer iLayer : layers) {
+                Layer[] layers = event.getLayers().getLayers();
+                for (Layer iLayer : layers) {
                     AbstractLeafletLayerConnector<?> c = fgc
                             .getConnectorFor(iLayer);
                     if (c != null) {
@@ -108,11 +109,16 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                             rpc.rectangleModified(rc,
                                     U.toBounds(polyline.getBounds()));
                         } else if (c instanceof LeafletPolylineConnector) {
-                            // polygon also gets here
                             LeafletPolylineConnector plc = (LeafletPolylineConnector) c;
                             Polyline polyline = (Polyline) plc.getLayer();
                             rpc.polylineModified(plc,
                                     U.toPointArray(polyline.getLatLngs()));
+                        } else if (c instanceof LeafletPolygonConnector) {
+                            // polygon also gets here
+                            LeafletPolygonConnector plc = (LeafletPolygonConnector) c;
+                            Polygon polyline = (Polygon) plc.getLayer();
+                            rpc.polylineModified(plc,
+                                    U.toPointArray(polyline.getExteriorRing()));
                         }
                     }
                 }
@@ -123,8 +129,8 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 
             @Override
             public void onDelete(LayersDeletedEvent event) {
-                ILayer[] layers = event.getLayers().getLayers();
-                for (ILayer iLayer : layers) {
+                Layer[] layers = event.getLayers().getLayers();
+                for (Layer iLayer : layers) {
                     AbstractLeafletLayerConnector<?> c = fgc
                             .getConnectorFor(iLayer);
                     rpc.layerDeleted(c);

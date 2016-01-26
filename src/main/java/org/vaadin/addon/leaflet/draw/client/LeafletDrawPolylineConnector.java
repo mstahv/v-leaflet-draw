@@ -15,6 +15,7 @@ import com.vaadin.client.ServerConnector;
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
+import org.peimari.gleaflet.client.LatLng;
 
 @Connect(LDrawPolyline.class)
 public class LeafletDrawPolylineConnector extends AbstractLeafletDrawFeatureConnector {
@@ -39,7 +40,8 @@ public class LeafletDrawPolylineConnector extends AbstractLeafletDrawFeatureConn
 					@Override
 					public void onCreate(LayerCreatedEvent event) {
 						Polyline layer = (Polyline) event.getLayer();
-						rpc.polylineAdded(U.toPointArray(layer.getLatLngs()));
+                        final LatLng[] latLngs = layer.getLatLngs();
+						rpc.polylineAdded(U.toPointArray(latLngs));
 						getMap().removeListener(listenerRegistration);
 						listenerRegistration = null;
 					}

@@ -8,7 +8,7 @@ import org.vaadin.addon.leaflet.draw.LDrawRectangle;
 import com.vaadin.shared.ui.Connect;
 
 @Connect(LDrawRectangle.class)
-public class LeafletDrawRectangleConnector extends LeafletDrawPolylineConnector {
+public class LeafletDrawRectangleConnector extends LeafletDrawPolygonConnector {
 	
 	@Override
 	protected DrawFeature instantiateDrawFeature() {
