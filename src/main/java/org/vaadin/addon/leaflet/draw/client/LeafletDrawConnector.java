@@ -108,17 +108,17 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                             Rectangle polyline = (Rectangle) rc.getLayer();
                             rpc.rectangleModified(rc,
                                     U.toBounds(polyline.getBounds()));
+                        } else if (c instanceof LeafletPolygonConnector) {
+                            // polygon also gets here
+                            LeafletPolygonConnector plc = (LeafletPolygonConnector) c;
+                            Polygon polyline = (Polygon) plc.getLayer();
+                            rpc.polygonModified(plc, U.toPointArray(polyline.
+                                    getExteriorRing()));
                         } else if (c instanceof LeafletPolylineConnector) {
                             LeafletPolylineConnector plc = (LeafletPolylineConnector) c;
                             Polyline polyline = (Polyline) plc.getLayer();
                             rpc.polylineModified(plc,
                                     U.toPointArray(polyline.getLatLngs()));
-                        } else if (c instanceof LeafletPolygonConnector) {
-                            // polygon also gets here
-                            LeafletPolygonConnector plc = (LeafletPolygonConnector) c;
-                            Polygon polyline = (Polygon) plc.getLayer();
-                            rpc.polylineModified(plc,
-                                    U.toPointArray(polyline.getExteriorRing()));
                         }
                     }
                 }

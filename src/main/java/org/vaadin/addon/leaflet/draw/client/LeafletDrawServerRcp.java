@@ -7,26 +7,29 @@ import com.vaadin.shared.Connector;
 import com.vaadin.shared.communication.ServerRpc;
 
 public interface LeafletDrawServerRcp extends ServerRpc {
-	
-	public void markerDrawn(Point p);
 
-	public void circleDrawn(Point point, double radius);
+    public void markerDrawn(Point p);
 
-	public void polygonDrawn(Point[] latLngs);
+    public void circleDrawn(Point point, double radius);
 
-        public void rectangleDrawn(Bounds bounds);
+    public void polygonDrawn(Point[] latLngs);
 
-	public void polylineDrawn(Point[] latLngs);
+    public void rectangleDrawn(Bounds bounds);
 
-	public void layerDeleted(Connector c);
-	
-	public void markerModified(Connector mc, Point newPoint);
+    public void polylineDrawn(Point[] latLngs);
 
-	public void circleModified(Connector cc, Point latLng,
-			double radius);
+    public void layerDeleted(Connector c);
 
-	public void polylineModified(Connector plc,
-			Point[] pointArray);
+    public void markerModified(Connector mc, Point newPoint);
 
-	public void rectangleModified(Connector rc, Bounds bounds);
+    public void circleModified(Connector cc, Point latLng,
+            double radius);
+
+    public void polylineModified(Connector plc,
+            Point[] pointArray);
+
+    public void polygonModified(Connector plc,
+            Point[] pointArray);
+
+    public void rectangleModified(Connector rc, Bounds bounds);
 }
