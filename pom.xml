@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.addon</groupId>
     <artifactId>v-leaflet-draw</artifactId>
-    <version>0.6.2-SNAPSHOT</version>
+    <version>0.6.2</version>
     <name>V-Leaflet-Draw</name>
     
     <properties>
@@ -20,7 +20,7 @@
         <url>git://github.com/mstahv/v-leaflet-draw.git</url>
         <connection>scm:git:git://github.com/mstahv/v-leaflet-draw.git</connection>
         <developerConnection>scm:git:ssh://git@github.com:/mstahv/v-leaflet-draw.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>v-leaflet-draw-0.6.2</tag>
   </scm>
 
     <issueManagement>
@@ -305,12 +305,12 @@
         <dependency>
             <groupId>org.vaadin.addon</groupId>
             <artifactId>v-leaflet</artifactId>
-            <version>1.0.0-b6-SNAPSHOT</version>
+            <version>1.0.0-b6</version>
         </dependency>
         <dependency>
             <groupId>org.peimari</groupId>
             <artifactId>g-leaflet-draw</artifactId>
-            <version>0.4.10-SNAPSHOT</version>
+            <version>0.4.10</version>
             <!-- Only needed during widgetset compilation, so provided scope would 
             be great for this, but with it is left out from widgetset compilation by 
             vaadin plugin -->
