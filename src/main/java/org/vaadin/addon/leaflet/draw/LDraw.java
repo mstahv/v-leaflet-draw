@@ -71,6 +71,20 @@ public class LDraw extends AbstractControl {
         }
     }
 
+    public static class DeleteStartedEvent extends EventObject {
+
+        public DeleteStartedEvent(Object source) {
+            super(source);
+        }
+    }
+
+    public static class DeleteStoppedEvent extends EventObject {
+
+        public DeleteStoppedEvent(Object source) {
+            super(source);
+        }
+    }
+
     public interface FeatureDrawnListener {
 
         public static final Method drawnMethod = ReflectTools
@@ -87,6 +101,24 @@ public class LDraw extends AbstractControl {
                 FeatureModifiedEvent.class);
 
         public void featureModified(FeatureModifiedEvent event);
+    }
+
+    public interface DeleteStartedListener {
+
+        public static final Method deleteStartedMethod = ReflectTools.findMethod(
+                DeleteStartedListener.class, "deleteStarted",
+                DeleteStartedEvent.class);
+
+        public void deleteStarted(DeleteStartedEvent event);
+    }
+
+    public interface DeleteStoppedListener {
+
+        public static final Method deleteStoppedMethod = ReflectTools.findMethod(
+                DeleteStoppedListener.class, "deleteStopped",
+                DeleteStoppedEvent.class);
+
+        public void deleteStopped(DeleteStoppedEvent event);
     }
 
     public interface FeatureDeletedListener {
@@ -123,6 +155,25 @@ public class LDraw extends AbstractControl {
     public void removeFeatureDeletedListener(FeatureDeletedListener listener) {
         removeListener(FeatureDeletedEvent.class, listener);
     }
+
+    public void addDeleteStartedListener(DeleteStartedListener listener) {
+        addListener(DeleteStartedEvent.class, listener,
+                DeleteStartedListener.deleteStartedMethod);
+    }
+
+    public void removeDeleteStartedListener(DeleteStartedListener listener) {
+        removeListener(DeleteStartedEvent.class, listener);
+    }
+
+    public void addDeleteStoppedListener(DeleteStoppedListener listener) {
+        addListener(DeleteStoppedEvent.class, listener,
+                DeleteStoppedListener.deleteStoppedMethod);
+    }
+
+    public void removeDeleteStoppedListener(DeleteStoppedListener listener) {
+        removeListener(DeleteStoppedEvent.class, listener);
+    }
+
 
     public LDraw() {
         registerRpc(new LeafletDrawServerRcp() {
@@ -187,6 +238,16 @@ public class LDraw extends AbstractControl {
             @Override
             public void layerDeleted(Connector c) {
                 fireEvent(new FeatureDeletedEvent(LDraw.this, (LeafletLayer) c));
+            }
+
+            @Override
+            public void deleteStart() {
+                fireEvent(new DeleteStartedEvent(LDraw.this));
+            }
+
+            @Override
+            public void deleteStop() {
+                fireEvent(new DeleteStoppedEvent(LDraw.this));
             }
 
             @Override

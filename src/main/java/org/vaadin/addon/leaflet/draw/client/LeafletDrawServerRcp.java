@@ -20,6 +20,10 @@ public interface LeafletDrawServerRcp extends ServerRpc {
 
     public void layerDeleted(Connector c);
 
+    public void deleteStart();
+
+    public void deleteStop();
+
     public void markerModified(Connector mc, Point newPoint);
 
     public void circleModified(Connector cc, Point latLng,
