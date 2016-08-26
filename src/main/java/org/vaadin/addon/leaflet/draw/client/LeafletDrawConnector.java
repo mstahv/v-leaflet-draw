@@ -190,6 +190,20 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
             }
         });
 
+        getMap().addEditStartListener(new EditStartListener() {
+            @Override
+            public void onEditStart(EditStartEvent event) {
+                rpc.editStart();
+            }
+        });
+
+        getMap().addEditStopListener(new EditStopListener() {
+            @Override
+            public void onEditStop(EditStopEvent event) {
+                rpc.editStop();
+            }
+        });
+
         getMap().addDeleteStartListener(new DeleteStartListener() {
             @Override
             public void onDeleteStart(DeleteStartEvent event) {

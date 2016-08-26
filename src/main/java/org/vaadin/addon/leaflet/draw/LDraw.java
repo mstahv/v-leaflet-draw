@@ -71,6 +71,20 @@ public class LDraw extends AbstractControl {
         }
     }
 
+    public static class EditStartedEvent extends EventObject {
+
+        public EditStartedEvent(Object source) {
+            super(source);
+        }
+    }
+
+    public static class EditStoppedEvent extends EventObject {
+
+        public EditStoppedEvent(Object source) {
+            super(source);
+        }
+    }
+
     public static class DeleteStartedEvent extends EventObject {
 
         public DeleteStartedEvent(Object source) {
@@ -101,6 +115,24 @@ public class LDraw extends AbstractControl {
                 FeatureModifiedEvent.class);
 
         public void featureModified(FeatureModifiedEvent event);
+    }
+
+    public interface EditStartedListener {
+
+        public static final Method editStartedMethod = ReflectTools.findMethod(
+                EditStartedListener.class, "editStarted",
+                EditStartedEvent.class);
+
+        public void editStarted(EditStartedEvent event);
+    }
+
+    public interface EditStoppedListener {
+
+        public static final Method editStoppedMethod = ReflectTools.findMethod(
+                EditStoppedListener.class, "editStopped",
+                EditStoppedEvent.class);
+
+        public void editStopped(EditStoppedEvent event);
     }
 
     public interface DeleteStartedListener {
@@ -146,6 +178,24 @@ public class LDraw extends AbstractControl {
 
     public void removeFeatureModifiedListener(FeatureModifiedListener listener) {
         removeListener(FeatureModifiedEvent.class, listener);
+    }
+
+    public void addEditStartedListener(EditStartedListener listener) {
+        addListener(EditStartedEvent.class, listener,
+                EditStartedListener.editStartedMethod);
+    }
+
+    public void removeEditStartedListener(EditStartedListener listener) {
+        removeListener(EditStartedEvent.class, listener);
+    }
+
+    public void addEditStoppedListener(EditStoppedListener listener) {
+        addListener(EditStoppedEvent.class, listener,
+                EditStoppedListener.editStoppedMethod);
+    }
+
+    public void removeEditStoppedListener(EditStoppedListener listener) {
+        removeListener(EditStoppedEvent.class, listener);
     }
 
     public void addFeatureDeletedListener(FeatureDeletedListener listener) {
@@ -238,6 +288,16 @@ public class LDraw extends AbstractControl {
             @Override
             public void layerDeleted(Connector c) {
                 fireEvent(new FeatureDeletedEvent(LDraw.this, (LeafletLayer) c));
+            }
+
+            @Override
+            public void editStart() {
+                fireEvent(new EditStartedEvent(LDraw.this));
+            }
+
+            @Override
+            public void editStop() {
+                fireEvent(new EditStoppedEvent(LDraw.this));
             }
 
             @Override
