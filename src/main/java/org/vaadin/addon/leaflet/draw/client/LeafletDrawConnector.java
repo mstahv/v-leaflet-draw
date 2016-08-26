@@ -47,6 +47,58 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         if (getState().drawVisibleButtons != null) {
             buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
         }
+
+        if (getState().polygonHandlerState != null) {
+            LeafletDrawPolygonHandlerState polygonState = getState().polygonHandlerState;
+            DrawPolygonHandlerOptions polygonOptions = DrawPolygonHandlerOptions.create();
+            ShapeOptions shapeOptions = ShapeOptions.create();
+
+            if (polygonState.showArea != null) {
+                polygonOptions.setShowArea(polygonState.showArea);
+            }
+            if (polygonState.allowIntersection != null) {
+                polygonOptions.setAllowIntersection(polygonState.allowIntersection);
+            }
+            if (polygonState.guidelineDistance != null) {
+                polygonOptions.setGuidelineDistance(polygonState.guidelineDistance);
+            }
+            if (polygonState.metric != null) {
+                polygonOptions.setMetric(polygonState.metric);
+            }
+            if (polygonState.zIndexOffset != null) {
+                polygonOptions.setZIndexOffset(polygonState.zIndexOffset);
+            }
+            if (polygonState.repeatMode != null) {
+                polygonOptions.setRepeatMode(polygonState.repeatMode);
+            }
+            if (polygonState.stroke != null) {
+                shapeOptions.setStroke(polygonState.stroke);
+            }
+            if (polygonState.color != null) {
+                shapeOptions.setColor(polygonState.color);
+            }
+            if (polygonState.weight != null) {
+                shapeOptions.setWeight(polygonState.weight);
+            }
+            if (polygonState.opacity != null) {
+                shapeOptions.setOpacity(polygonState.opacity);
+            }
+            if (polygonState.fill != null) {
+                shapeOptions.setFill(polygonState.fill);
+            }
+            if (polygonState.fillColor != null) {
+                shapeOptions.setFillColor(polygonState.fillColor);
+            }
+            if (polygonState.fillOpacity != null) {
+                shapeOptions.setFillOpacity(polygonState.fillOpacity);
+            }
+            if (polygonState.dashArray != null) {
+                shapeOptions.setDashArray(polygonState.dashArray);
+            }
+            polygonOptions.setShapeOptions(shapeOptions);
+            buttonOptions.setPolygonHandlerOptions(polygonOptions);
+        }
+
         options.setDraw(buttonOptions);
 
         Draw l = Draw.create(options);

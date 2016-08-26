@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Set;
 
-import org.vaadin.addon.leaflet.AbstractLeafletVector;
 import org.vaadin.addon.leaflet.LCircle;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMarker;
@@ -12,6 +11,7 @@ import org.vaadin.addon.leaflet.LPolygon;
 import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.LeafletLayer;
 import org.vaadin.addon.leaflet.control.AbstractControl;
+import org.vaadin.addon.leaflet.draw.client.LeafletDrawPolygonHandlerState;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawState;
 import org.vaadin.addon.leaflet.shared.Point;
@@ -256,7 +256,7 @@ public class LDraw extends AbstractControl {
                 pl.setPoints(pointArray);
                 fireEvent(new FeatureModifiedEvent(LDraw.this, pl));
             }
-            
+
         });
     }
 
@@ -271,6 +271,14 @@ public class LDraw extends AbstractControl {
 
     public void setDrawVisibleButtons(Set<String> drawVisibleButtons) {
         getState().drawVisibleButtons = drawVisibleButtons;
+    }
+
+    public LeafletDrawPolygonHandlerState getPolygonHandlerState() {
+        return getState().polygonHandlerState;
+    }
+
+    public void setPolygonHandlerState(LeafletDrawPolygonHandlerState polygonHandlerState) {
+        getState().polygonHandlerState = polygonHandlerState;
     }
 
 }

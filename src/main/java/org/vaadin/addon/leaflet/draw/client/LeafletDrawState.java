@@ -28,4 +28,6 @@ public class LeafletDrawState extends LeafletControlState {
 	public Connector featureGroup;
 
 	public Set<String> drawVisibleButtons;
+
+	public LeafletDrawPolygonHandlerState polygonHandlerState;
 }
