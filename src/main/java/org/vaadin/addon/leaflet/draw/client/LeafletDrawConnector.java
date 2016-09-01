@@ -190,6 +190,20 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
             }
         });
 
+        getMap().addDrawStartListener(new DrawStartListener() {
+            @Override
+            public void onDrawStart(DrawStartEvent event) {
+                rpc.drawStart(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
+        getMap().addDrawStopListener(new DrawStopListener() {
+            @Override
+            public void onDrawStop(DrawStopEvent event) {
+                rpc.drawStop(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
         getMap().addEditStartListener(new EditStartListener() {
             @Override
             public void onEditStart(EditStartEvent event) {

@@ -14,6 +14,7 @@ import org.vaadin.addon.leaflet.control.AbstractControl;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawPolygonHandlerState;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawState;
+import org.vaadin.addon.leaflet.draw.shared.LayerType;
 import org.vaadin.addon.leaflet.shared.Point;
 
 import com.vaadin.server.AbstractClientConnector;
@@ -71,30 +72,58 @@ public class LDraw extends AbstractControl {
         }
     }
 
-    public static class EditStartedEvent extends EventObject {
+    public static class DrawStartEvent extends EventObject {
 
-        public EditStartedEvent(Object source) {
+        private LayerType layerType;
+
+        public DrawStartEvent(LDraw lDraw, LayerType layerType) {
+            super(lDraw);
+            this.layerType = layerType;
+        }
+
+        public LayerType getLayerType() {
+            return layerType;
+        }
+    }
+
+    public static class DrawStopEvent extends EventObject {
+
+        private LayerType layerType;
+
+        public DrawStopEvent(LDraw lDraw, LayerType layerType) {
+            super(lDraw);
+            this.layerType = layerType;
+        }
+
+        public LayerType getLayerType() {
+            return layerType;
+        }
+    }
+
+    public static class EditStartEvent extends EventObject {
+
+        public EditStartEvent(Object source) {
             super(source);
         }
     }
 
-    public static class EditStoppedEvent extends EventObject {
+    public static class EditStopEvent extends EventObject {
 
-        public EditStoppedEvent(Object source) {
+        public EditStopEvent(Object source) {
             super(source);
         }
     }
 
-    public static class DeleteStartedEvent extends EventObject {
+    public static class DeleteStartEvent extends EventObject {
 
-        public DeleteStartedEvent(Object source) {
+        public DeleteStartEvent(Object source) {
             super(source);
         }
     }
 
-    public static class DeleteStoppedEvent extends EventObject {
+    public static class DeleteStopEvent extends EventObject {
 
-        public DeleteStoppedEvent(Object source) {
+        public DeleteStopEvent(Object source) {
             super(source);
         }
     }
@@ -117,40 +146,58 @@ public class LDraw extends AbstractControl {
         public void featureModified(FeatureModifiedEvent event);
     }
 
-    public interface EditStartedListener {
+    public interface DrawStartListener {
 
-        public static final Method editStartedMethod = ReflectTools.findMethod(
-                EditStartedListener.class, "editStarted",
-                EditStartedEvent.class);
+        public static final Method drawStartMethod = ReflectTools.findMethod(
+                DrawStartListener.class, "drawStart",
+                DrawStartEvent.class);
 
-        public void editStarted(EditStartedEvent event);
+        public void drawStart(DrawStartEvent event);
     }
 
-    public interface EditStoppedListener {
+    public interface DrawStopListener {
 
-        public static final Method editStoppedMethod = ReflectTools.findMethod(
-                EditStoppedListener.class, "editStopped",
-                EditStoppedEvent.class);
+        public static final Method drawStopMethod = ReflectTools.findMethod(
+                DrawStopListener.class, "drawStop",
+                DrawStopEvent.class);
 
-        public void editStopped(EditStoppedEvent event);
+        public void drawStop(DrawStopEvent event);
     }
 
-    public interface DeleteStartedListener {
+    public interface EditStartListener {
 
-        public static final Method deleteStartedMethod = ReflectTools.findMethod(
-                DeleteStartedListener.class, "deleteStarted",
-                DeleteStartedEvent.class);
+        public static final Method editStartMethod = ReflectTools.findMethod(
+                EditStartListener.class, "editStart",
+                EditStartEvent.class);
 
-        public void deleteStarted(DeleteStartedEvent event);
+        public void editStart(EditStartEvent event);
     }
 
-    public interface DeleteStoppedListener {
+    public interface EditStopListener {
 
-        public static final Method deleteStoppedMethod = ReflectTools.findMethod(
-                DeleteStoppedListener.class, "deleteStopped",
-                DeleteStoppedEvent.class);
+        public static final Method editStopMethod = ReflectTools.findMethod(
+                EditStopListener.class, "editStop",
+                EditStopEvent.class);
 
-        public void deleteStopped(DeleteStoppedEvent event);
+        public void editStop(EditStopEvent event);
+    }
+
+    public interface DeleteStartListener {
+
+        public static final Method deleteStartMethod = ReflectTools.findMethod(
+                DeleteStartListener.class, "deleteStart",
+                DeleteStartEvent.class);
+
+        public void deleteStart(DeleteStartEvent event);
+    }
+
+    public interface DeleteStopListener {
+
+        public static final Method deleteStopMethod = ReflectTools.findMethod(
+                DeleteStopListener.class, "deleteStop",
+                DeleteStopEvent.class);
+
+        public void deleteStop(DeleteStopEvent event);
     }
 
     public interface FeatureDeletedListener {
@@ -180,22 +227,40 @@ public class LDraw extends AbstractControl {
         removeListener(FeatureModifiedEvent.class, listener);
     }
 
-    public void addEditStartedListener(EditStartedListener listener) {
-        addListener(EditStartedEvent.class, listener,
-                EditStartedListener.editStartedMethod);
+    public void addDrawStartListener(DrawStartListener listener) {
+        addListener(DrawStartEvent.class, listener,
+                DrawStartListener.drawStartMethod);
     }
 
-    public void removeEditStartedListener(EditStartedListener listener) {
-        removeListener(EditStartedEvent.class, listener);
+    public void removeDrawStartListener(DrawStartListener listener) {
+        removeListener(DrawStartEvent.class, listener);
     }
 
-    public void addEditStoppedListener(EditStoppedListener listener) {
-        addListener(EditStoppedEvent.class, listener,
-                EditStoppedListener.editStoppedMethod);
+    public void addDrawStopListener(DrawStopListener listener) {
+        addListener(DrawStopEvent.class, listener,
+                DrawStopListener.drawStopMethod);
     }
 
-    public void removeEditStoppedListener(EditStoppedListener listener) {
-        removeListener(EditStoppedEvent.class, listener);
+    public void removeDrawStopListener(DrawStopListener listener) {
+        removeListener(DrawStopEvent.class, listener);
+    }
+
+    public void addEditStartListener(EditStartListener listener) {
+        addListener(EditStartEvent.class, listener,
+                EditStartListener.editStartMethod);
+    }
+
+    public void removeEditStartListener(EditStartListener listener) {
+        removeListener(EditStartEvent.class, listener);
+    }
+
+    public void addEditStopListener(EditStopListener listener) {
+        addListener(EditStopEvent.class, listener,
+                EditStopListener.editStopMethod);
+    }
+
+    public void removeEditStopListener(EditStopListener listener) {
+        removeListener(EditStopEvent.class, listener);
     }
 
     public void addFeatureDeletedListener(FeatureDeletedListener listener) {
@@ -206,22 +271,22 @@ public class LDraw extends AbstractControl {
         removeListener(FeatureDeletedEvent.class, listener);
     }
 
-    public void addDeleteStartedListener(DeleteStartedListener listener) {
-        addListener(DeleteStartedEvent.class, listener,
-                DeleteStartedListener.deleteStartedMethod);
+    public void addDeleteStartListener(DeleteStartListener listener) {
+        addListener(DeleteStartEvent.class, listener,
+                DeleteStartListener.deleteStartMethod);
     }
 
-    public void removeDeleteStartedListener(DeleteStartedListener listener) {
-        removeListener(DeleteStartedEvent.class, listener);
+    public void removeDeleteStartListener(DeleteStartListener listener) {
+        removeListener(DeleteStartEvent.class, listener);
     }
 
-    public void addDeleteStoppedListener(DeleteStoppedListener listener) {
-        addListener(DeleteStoppedEvent.class, listener,
-                DeleteStoppedListener.deleteStoppedMethod);
+    public void addDeleteStopListener(DeleteStopListener listener) {
+        addListener(DeleteStopEvent.class, listener,
+                DeleteStopListener.deleteStopMethod);
     }
 
-    public void removeDeleteStoppedListener(DeleteStoppedListener listener) {
-        removeListener(DeleteStoppedEvent.class, listener);
+    public void removeDeleteStopListener(DeleteStopListener listener) {
+        removeListener(DeleteStopEvent.class, listener);
     }
 
 
@@ -291,23 +356,33 @@ public class LDraw extends AbstractControl {
             }
 
             @Override
+            public void drawStart(LayerType layerType) {
+                fireEvent(new DrawStartEvent(LDraw.this, layerType));
+            }
+
+            @Override
+            public void drawStop(LayerType layerType) {
+                fireEvent(new DrawStopEvent(LDraw.this, layerType));
+            }
+
+            @Override
             public void editStart() {
-                fireEvent(new EditStartedEvent(LDraw.this));
+                fireEvent(new EditStartEvent(LDraw.this));
             }
 
             @Override
             public void editStop() {
-                fireEvent(new EditStoppedEvent(LDraw.this));
+                fireEvent(new EditStopEvent(LDraw.this));
             }
 
             @Override
             public void deleteStart() {
-                fireEvent(new DeleteStartedEvent(LDraw.this));
+                fireEvent(new DeleteStartEvent(LDraw.this));
             }
 
             @Override
             public void deleteStop() {
-                fireEvent(new DeleteStoppedEvent(LDraw.this));
+                fireEvent(new DeleteStopEvent(LDraw.this));
             }
 
             @Override

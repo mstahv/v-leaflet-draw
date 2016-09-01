@@ -1,5 +1,6 @@
 package org.vaadin.addon.leaflet.draw.client;
 
+import org.vaadin.addon.leaflet.draw.shared.LayerType;
 import org.vaadin.addon.leaflet.shared.Point;
 import org.vaadin.addon.leaflet.shared.Bounds;
 
@@ -19,6 +20,10 @@ public interface LeafletDrawServerRcp extends ServerRpc {
     public void polylineDrawn(Point[] latLngs);
 
     public void layerDeleted(Connector c);
+
+    public void drawStart(LayerType layerType);
+
+    public void drawStop(LayerType layerType);
 
     public void editStart();
 
