@@ -50,53 +50,14 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 
         if (getState().polygonHandlerState != null) {
             LeafletDrawPolygonHandlerState polygonState = getState().polygonHandlerState;
-            DrawPolygonHandlerOptions polygonOptions = DrawPolygonHandlerOptions.create();
-            ShapeOptions shapeOptions = ShapeOptions.create();
-
-            if (polygonState.showArea != null) {
-                polygonOptions.setShowArea(polygonState.showArea);
-            }
-            if (polygonState.allowIntersection != null) {
-                polygonOptions.setAllowIntersection(polygonState.allowIntersection);
-            }
-            if (polygonState.guidelineDistance != null) {
-                polygonOptions.setGuidelineDistance(polygonState.guidelineDistance);
-            }
-            if (polygonState.metric != null) {
-                polygonOptions.setMetric(polygonState.metric);
-            }
-            if (polygonState.zIndexOffset != null) {
-                polygonOptions.setZIndexOffset(polygonState.zIndexOffset);
-            }
-            if (polygonState.repeatMode != null) {
-                polygonOptions.setRepeatMode(polygonState.repeatMode);
-            }
-            if (polygonState.stroke != null) {
-                shapeOptions.setStroke(polygonState.stroke);
-            }
-            if (polygonState.color != null) {
-                shapeOptions.setColor(polygonState.color);
-            }
-            if (polygonState.weight != null) {
-                shapeOptions.setWeight(polygonState.weight);
-            }
-            if (polygonState.opacity != null) {
-                shapeOptions.setOpacity(polygonState.opacity);
-            }
-            if (polygonState.fill != null) {
-                shapeOptions.setFill(polygonState.fill);
-            }
-            if (polygonState.fillColor != null) {
-                shapeOptions.setFillColor(polygonState.fillColor);
-            }
-            if (polygonState.fillOpacity != null) {
-                shapeOptions.setFillOpacity(polygonState.fillOpacity);
-            }
-            if (polygonState.dashArray != null) {
-                shapeOptions.setDashArray(polygonState.dashArray);
-            }
-            polygonOptions.setShapeOptions(shapeOptions);
+            DrawPolygonHandlerOptions polygonOptions = createPolygonOptions(polygonState);
             buttonOptions.setPolygonHandlerOptions(polygonOptions);
+        }
+
+        if (getState().polylineHandlerState != null) {
+            LeafletDrawPolylineHandlerState polylineState = getState().polylineHandlerState;
+            DrawPolylineHandlerOptions polylineOptions = createPolylineOptions(polylineState);
+            buttonOptions.setPolylineHandlerOptions(polylineOptions);
         }
 
         options.setDraw(buttonOptions);
@@ -233,6 +194,66 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         });
 
         return l;
+    }
+
+    protected DrawPolygonHandlerOptions createPolygonOptions(LeafletDrawPolygonHandlerState state) {
+        DrawPolygonHandlerOptions options = createPolylineOptions(state).cast();
+        if (state.showArea != null) {
+            options.setShowArea(state.showArea);
+        }
+        return options;
+    }
+
+    protected DrawPolylineHandlerOptions createPolylineOptions(LeafletDrawPolylineHandlerState state) {
+        DrawPolylineHandlerOptions options = DrawPolylineHandlerOptions.create();
+        ShapeOptions shapeOptions = createShapeOptions(state);
+        options.setShapeOptions(shapeOptions);
+
+        if (state.allowIntersection != null) {
+            options.setAllowIntersection(state.allowIntersection);
+        }
+        if (state.guidelineDistance != null) {
+            options.setGuidelineDistance(state.guidelineDistance);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
+        if (state.zIndexOffset != null) {
+            options.setZIndexOffset(state.zIndexOffset);
+        }
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    protected ShapeOptions createShapeOptions(AbstractLeafletDrawVectorHandlerState state) {
+        ShapeOptions options = ShapeOptions.create();
+        if (state.stroke != null) {
+            options.setStroke(state.stroke);
+        }
+        if (state.color != null) {
+            options.setColor(state.color);
+        }
+        if (state.weight != null) {
+            options.setWeight(state.weight);
+        }
+        if (state.opacity != null) {
+            options.setOpacity(state.opacity);
+        }
+        if (state.fill != null) {
+            options.setFill(state.fill);
+        }
+        if (state.fillColor != null) {
+            options.setFillColor(state.fillColor);
+        }
+        if (state.fillOpacity != null) {
+            options.setFillOpacity(state.fillOpacity);
+        }
+        if (state.dashArray != null) {
+            options.setDashArray(state.dashArray);
+        }
+        return options;
     }
 
     protected void doStateChange(StateChangeEvent stateChangeEvent) {

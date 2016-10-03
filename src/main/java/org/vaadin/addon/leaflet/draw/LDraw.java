@@ -12,6 +12,7 @@ import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.LeafletLayer;
 import org.vaadin.addon.leaflet.control.AbstractControl;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawPolygonHandlerState;
+import org.vaadin.addon.leaflet.draw.client.LeafletDrawPolylineHandlerState;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawState;
 import org.vaadin.addon.leaflet.draw.shared.LayerType;
@@ -414,6 +415,14 @@ public class LDraw extends AbstractControl {
 
     public void setPolygonHandlerState(LeafletDrawPolygonHandlerState polygonHandlerState) {
         getState().polygonHandlerState = polygonHandlerState;
+    }
+
+    public LeafletDrawPolylineHandlerState getPolylineHandlerState() {
+        return getState().polylineHandlerState;
+    }
+
+    public void setPolylineHandlerState(LeafletDrawPolylineHandlerState polylineHandlerState) {
+        getState().polylineHandlerState = polylineHandlerState;
     }
 
 }

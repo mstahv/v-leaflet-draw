@@ -30,4 +30,6 @@ public class LeafletDrawState extends LeafletControlState {
 	public Set<String> drawVisibleButtons;
 
 	public LeafletDrawPolygonHandlerState polygonHandlerState;
+
+	public LeafletDrawPolylineHandlerState polylineHandlerState;
 }
