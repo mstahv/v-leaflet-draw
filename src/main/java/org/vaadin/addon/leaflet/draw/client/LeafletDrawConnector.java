@@ -47,6 +47,19 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         if (getState().drawVisibleButtons != null) {
             buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
         }
+
+        if (getState().polygonHandlerState != null) {
+            LeafletDrawPolygonHandlerState polygonState = getState().polygonHandlerState;
+            DrawPolygonHandlerOptions polygonOptions = createPolygonOptions(polygonState);
+            buttonOptions.setPolygonHandlerOptions(polygonOptions);
+        }
+
+        if (getState().polylineHandlerState != null) {
+            LeafletDrawPolylineHandlerState polylineState = getState().polylineHandlerState;
+            DrawPolylineHandlerOptions polylineOptions = createPolylineOptions(polylineState);
+            buttonOptions.setPolylineHandlerOptions(polylineOptions);
+        }
+
         options.setDraw(buttonOptions);
 
         Draw l = Draw.create(options);
@@ -138,7 +151,109 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
             }
         });
 
+        getMap().addDrawStartListener(new DrawStartListener() {
+            @Override
+            public void onDrawStart(DrawStartEvent event) {
+                rpc.drawStart(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
+        getMap().addDrawStopListener(new DrawStopListener() {
+            @Override
+            public void onDrawStop(DrawStopEvent event) {
+                rpc.drawStop(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
+        getMap().addEditStartListener(new EditStartListener() {
+            @Override
+            public void onEditStart(EditStartEvent event) {
+                rpc.editStart();
+            }
+        });
+
+        getMap().addEditStopListener(new EditStopListener() {
+            @Override
+            public void onEditStop(EditStopEvent event) {
+                rpc.editStop();
+            }
+        });
+
+        getMap().addDeleteStartListener(new DeleteStartListener() {
+            @Override
+            public void onDeleteStart(DeleteStartEvent event) {
+                rpc.deleteStart();
+            }
+        });
+
+        getMap().addDeleteStopListener(new DeleteStopListener() {
+            @Override
+            public void onDeleteStop(DeleteStopEvent event) {
+                rpc.deleteStop();
+            }
+        });
+
         return l;
+    }
+
+    protected DrawPolygonHandlerOptions createPolygonOptions(LeafletDrawPolygonHandlerState state) {
+        DrawPolygonHandlerOptions options = createPolylineOptions(state).cast();
+        if (state.showArea != null) {
+            options.setShowArea(state.showArea);
+        }
+        return options;
+    }
+
+    protected DrawPolylineHandlerOptions createPolylineOptions(LeafletDrawPolylineHandlerState state) {
+        DrawPolylineHandlerOptions options = DrawPolylineHandlerOptions.create();
+        ShapeOptions shapeOptions = createShapeOptions(state);
+        options.setShapeOptions(shapeOptions);
+
+        if (state.allowIntersection != null) {
+            options.setAllowIntersection(state.allowIntersection);
+        }
+        if (state.guidelineDistance != null) {
+            options.setGuidelineDistance(state.guidelineDistance);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
+        if (state.zIndexOffset != null) {
+            options.setZIndexOffset(state.zIndexOffset);
+        }
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    protected ShapeOptions createShapeOptions(AbstractLeafletDrawVectorHandlerState state) {
+        ShapeOptions options = ShapeOptions.create();
+        if (state.stroke != null) {
+            options.setStroke(state.stroke);
+        }
+        if (state.color != null) {
+            options.setColor(state.color);
+        }
+        if (state.weight != null) {
+            options.setWeight(state.weight);
+        }
+        if (state.opacity != null) {
+            options.setOpacity(state.opacity);
+        }
+        if (state.fill != null) {
+            options.setFill(state.fill);
+        }
+        if (state.fillColor != null) {
+            options.setFillColor(state.fillColor);
+        }
+        if (state.fillOpacity != null) {
+            options.setFillOpacity(state.fillOpacity);
+        }
+        if (state.dashArray != null) {
+            options.setDashArray(state.dashArray);
+        }
+        return options;
     }
 
     protected void doStateChange(StateChangeEvent stateChangeEvent) {
