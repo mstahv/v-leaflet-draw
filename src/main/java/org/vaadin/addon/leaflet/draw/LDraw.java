@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 import java.util.EventObject;
 import java.util.Set;
 
-import org.vaadin.addon.leaflet.AbstractLeafletVector;
 import org.vaadin.addon.leaflet.LCircle;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMarker;
@@ -13,6 +12,7 @@ import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.LeafletLayer;
 import org.vaadin.addon.leaflet.control.AbstractControl;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
+import org.vaadin.addon.leaflet.draw.shared.*;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawState;
 import org.vaadin.addon.leaflet.shared.Point;
 
@@ -208,8 +208,37 @@ public class LDraw extends AbstractControl {
         getState().featureGroup = group;
     }
 
+    /**
+     * @deprecated To hide a button, pass <code>null</code> to individual draw handler state method.
+     * @param drawVisibleButtons
+     */
+    @Deprecated
     public void setDrawVisibleButtons(Set<String> drawVisibleButtons) {
         getState().drawVisibleButtons = drawVisibleButtons;
+    }
+
+    /**
+     *
+     * @param polylineState or <code>null</code> to hide the polyline button
+     */
+    public void setDrawPolylineState(DrawPolylineState polylineState) {
+        getState().polylineState = polylineState;
+    }
+
+    public void setDrawPolygonState(DrawPolygonState polygonState) {
+        getState().polygonState = polygonState;
+    }
+
+    public void setDrawRectangleState(DrawRectangleState rectangleState) {
+        getState().rectangleState = rectangleState;
+    }
+
+    public void setDrawCircleState(DrawCircleState circleState) {
+        getState().circleState = circleState;
+    }
+
+    public void setDrawMarkerState(DrawMarkerState markerState) {
+        getState().markerState = markerState;
     }
 
 }
