@@ -9,6 +9,7 @@
 	<entry-point class="org.vaadin.addon.leaflet.draw.client.EagerDrawLoader"/>
 	
 	<source path="client/"></source>
+	<source path="shared/"></source>
 
 	<set-configuration-property name="devModeRedirectEnabled" value="true" />
 	

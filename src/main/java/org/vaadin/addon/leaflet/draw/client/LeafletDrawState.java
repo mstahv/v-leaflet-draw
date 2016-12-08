@@ -16,6 +16,7 @@
 package org.vaadin.addon.leaflet.draw.client;
 
 import com.vaadin.shared.Connector;
+import org.vaadin.addon.leaflet.draw.shared.*;
 import org.vaadin.addon.leaflet.shared.LeafletControlState;
 import java.util.Set;
 
@@ -28,4 +29,10 @@ public class LeafletDrawState extends LeafletControlState {
 	public Connector featureGroup;
 
 	public Set<String> drawVisibleButtons;
+
+	public DrawPolylineState polylineState = new DrawPolylineState();
+	public DrawPolygonState polygonState = new DrawPolygonState();
+	public DrawRectangleState rectangleState = new DrawRectangleState();
+	public DrawCircleState circleState = new DrawCircleState();
+	public DrawMarkerState markerState = new DrawMarkerState();
 }
