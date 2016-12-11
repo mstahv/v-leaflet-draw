@@ -2,9 +2,8 @@ package org.vaadin.addon.leaflet.draw;
 
 import java.lang.reflect.Method;
 import java.util.EventObject;
-import java.util.Set;
 
-import org.vaadin.addon.leaflet.AbstractLeafletVector;
+import com.vaadin.server.Resource;
 import org.vaadin.addon.leaflet.LCircle;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMarker;
@@ -13,7 +12,8 @@ import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.LeafletLayer;
 import org.vaadin.addon.leaflet.control.AbstractControl;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
-import org.vaadin.addon.leaflet.draw.client.LeafletDrawState;
+import org.vaadin.addon.leaflet.draw.shared.LeafletDrawState;
+import org.vaadin.addon.leaflet.jsonmodels.VectorStyle;
 import org.vaadin.addon.leaflet.shared.Point;
 
 import com.vaadin.server.AbstractClientConnector;
@@ -128,31 +128,39 @@ public class LDraw extends AbstractControl {
         registerRpc(new LeafletDrawServerRcp() {
             @Override
             public void markerDrawn(Point p) {
-                fireEvent(new FeatureDrawnEvent(LDraw.this, new LMarker(p)));
+                LMarker marker = new LMarker(p);
+                marker.setIcon(getResource("markerDrawIcon"));
+                marker.setIconSize(getState().drawMarkerState.iconSize);
+                marker.setIconAnchor(getState().drawMarkerState.iconAnchor);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, marker));
             }
 
             @Override
             public void circleDrawn(Point point, double radius) {
-                fireEvent(new FeatureDrawnEvent(LDraw.this, new LCircle(point,
-                        radius)));
+                LCircle circle = new LCircle(point, radius);
+                circle.setStyle(circleDrawStyle);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, circle));
             }
 
             @Override
             public void rectangleDrawn(Bounds bounds) {
-                fireEvent(new FeatureDrawnEvent(LDraw.this, new LRectangle(
-                        bounds)));
+                LRectangle rectangle = new LRectangle(bounds);
+                rectangle.setStyle(rectangleDrawStyle);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, rectangle));
             }
 
             @Override
             public void polygonDrawn(Point[] latLngs) {
-                fireEvent(new FeatureDrawnEvent(LDraw.this, new LPolygon(
-                        latLngs)));
+                LPolygon polygon = new LPolygon(latLngs);
+                polygon.setStyle(polygonDrawStyle);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, polygon));
             }
 
             @Override
             public void polylineDrawn(Point[] latLngs) {
-                fireEvent(new FeatureDrawnEvent(LDraw.this, new LPolyline(
-                        latLngs)));
+                LPolyline polyline = new LPolyline(latLngs);
+                polyline.setStyle(polylineDrawStyle);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, polyline));
             }
 
             @Override
@@ -204,12 +212,126 @@ public class LDraw extends AbstractControl {
         return (LeafletDrawState) super.getState();
     }
 
+    @Override
+    public void beforeClientResponse(boolean initial) {
+        getState().drawPolylineState.vectorStyleJson = polylineDrawStyle != null ? polylineDrawStyle.asJson() : "{}";
+        getState().drawPolygonState.vectorStyleJson = polygonDrawStyle != null ? polygonDrawStyle.asJson() : "{}";
+        getState().drawRectangleState.vectorStyleJson = rectangleDrawStyle != null ? rectangleDrawStyle.asJson() : "{}";
+        getState().drawCircleState.vectorStyleJson = circleDrawStyle != null ? circleDrawStyle.asJson() : "{}";
+        super.beforeClientResponse(initial);
+    }
+
     public void setEditableFeatureGroup(LFeatureGroup group) {
         getState().featureGroup = group;
     }
 
-    public void setDrawVisibleButtons(Set<String> drawVisibleButtons) {
-        getState().drawVisibleButtons = drawVisibleButtons;
+    private VectorStyle polylineDrawStyle;
+    private VectorStyle polygonDrawStyle;
+    private VectorStyle rectangleDrawStyle;
+    private VectorStyle circleDrawStyle;
+
+
+    public void setPolylineDrawHandlerVisible(Boolean visible) {
+        getState().drawPolylineState.visible = visible;
     }
 
+    public void setPolylineDrawAllowIntersection(Boolean allowIntersection) {
+        getState().drawPolylineState.allowIntersection = allowIntersection;
+    }
+
+    public void setPolylineDrawGuidelineDistance(Integer guidelineDistance) {
+        getState().drawPolylineState.guidelineDistance = guidelineDistance;
+    }
+
+    public void setPolylineDrawStyle(VectorStyle style) {
+        polylineDrawStyle = style;
+    }
+
+    public void setPolylineDrawMetric(Boolean metric) {
+        getState().drawPolylineState.metric = metric;
+    }
+
+    public void setPolylineDrawZIndexOffset(Integer zIndexOffset) {
+        getState().drawPolylineState.zIndexOffset = zIndexOffset;
+    }
+
+    public void setPolylineDrawRepeatMode(Boolean repeatMode) {
+        getState().drawPolylineState.repeatMode = repeatMode;
+    }
+
+
+    public void setPolygonDrawHandlerVisible(boolean visible) {
+        getState().drawPolygonState.visible = visible;
+    }
+
+    public void setPolygonDrawShowArea(Boolean showArea) {
+        getState().drawPolygonState.showArea = showArea;
+    }
+
+    public void setPolygonDrawAllowIntersection(Boolean allowIntersection) {
+        getState().drawPolygonState.allowIntersection = allowIntersection;
+    }
+
+    public void setPolygonDrawGuidelineDistance(Integer guidelineDistance) {
+        getState().drawPolygonState.guidelineDistance = guidelineDistance;
+    }
+
+    public void setPolygonDrawStyle(VectorStyle style) {
+        this.polygonDrawStyle = style;
+    }
+
+    public void setPolygonDrawMetric(Boolean metric) {
+        getState().drawPolygonState.metric = metric;
+    }
+
+    public void setPolygonDrawZIndexOffset(Integer zIndexOffset) {
+        getState().drawPolygonState.zIndexOffset = zIndexOffset;
+    }
+
+    public void setPolygonDrawRepeatMode(Boolean repeatMode) {
+        getState().drawPolygonState.repeatMode = repeatMode;
+    }
+
+
+    public void setRectangleDrawHandlerVisible(boolean visible) {
+        getState().drawRectangleState.visible = visible;
+    }
+
+    public void setRectangleDrawStyle(VectorStyle style) {
+        this.rectangleDrawStyle = style;
+    }
+
+    public void setRectangleDrawRepeatMode(Boolean repeatMode) {
+        getState().drawRectangleState.repeatMode = repeatMode;
+    }
+
+
+    public void setCircleDrawHandlerVisible(boolean visible) {
+        getState().drawCircleState.visible = visible;
+    }
+
+    public void setCircleDrawStyle(VectorStyle style) {
+        this.circleDrawStyle = style;
+    }
+
+    public void setCircleDrawRepeatMode(Boolean repeatMode) {
+        getState().drawCircleState.repeatMode = repeatMode;
+    }
+
+
+    public void setMarkerDrawHandlerVisible(boolean visible) {
+        getState().drawMarkerState.visible = visible;
+    }
+
+    public void setMarkerDrawIcon(Resource icon) {
+        setResource("markerDrawIcon", icon);
+    }
+
+    public void setMarkerDrawIconAnchor(Point anchor) {
+        getState().drawMarkerState.iconAnchor = anchor;
+    }
+
+    public void setMarkerDrawIconSize(Point size) {
+        getState().drawMarkerState.iconSize = size;
+    }
 }

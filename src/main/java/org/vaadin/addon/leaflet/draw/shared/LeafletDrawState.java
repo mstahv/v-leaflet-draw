@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.vaadin.addon.leaflet.draw.client;
+package org.vaadin.addon.leaflet.draw.shared;
 
 import com.vaadin.shared.Connector;
 import org.vaadin.addon.leaflet.shared.LeafletControlState;
@@ -27,5 +27,9 @@ public class LeafletDrawState extends LeafletControlState {
 
 	public Connector featureGroup;
 
-	public Set<String> drawVisibleButtons;
+	public DrawPolylineState drawPolylineState = new DrawPolylineState();
+	public DrawPolygonState drawPolygonState = new DrawPolygonState();
+	public DrawRectangleState drawRectangleState = new DrawRectangleState();
+	public DrawCircleState drawCircleState = new DrawCircleState();
+	public DrawMarkerState drawMarkerState = new DrawMarkerState();
 }
