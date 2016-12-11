@@ -29,6 +29,8 @@ public class LineStringField extends AbstractJTSField<LineString> {
 		return LineString.class;
 	}
 
+	LEditing editing = null;
+
 	protected void prepareEditing() {
 		if (lPolyline == null) {
 			lPolyline = new LPolyline();
@@ -37,7 +39,7 @@ public class LineStringField extends AbstractJTSField<LineString> {
 		Point[] lPointArray = JTSUtil.toLeafletPointArray(getCrsTranslator()
 				.toPresentation(getInternalValue()));
 		lPolyline.setPoints(lPointArray);
-		LEditing editing = new LEditing(lPolyline);
+		editing = new LEditing(lPolyline);
 		editing.addFeatureModifiedListener(new FeatureModifiedListener() {
 
 			@Override
@@ -61,6 +63,13 @@ public class LineStringField extends AbstractJTSField<LineString> {
 			}
 		});
 
+	}
+
+	@Override
+	protected void prepareViewing() {
+		if (editing != null) {
+			editing.remove();
+		}
 	}
 
 }

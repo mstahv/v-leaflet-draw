@@ -1,13 +1,8 @@
 package org.vaadin.addon.leaflet.draw.client;
 
-import org.peimari.gleaflet.client.Circle;
-import org.peimari.gleaflet.client.EditableMap;
-import org.peimari.gleaflet.client.FeatureGroup;
-import org.peimari.gleaflet.client.Layer;
-import org.peimari.gleaflet.client.Marker;
-import org.peimari.gleaflet.client.Polygon;
-import org.peimari.gleaflet.client.Polyline;
-import org.peimari.gleaflet.client.Rectangle;
+import com.google.gwt.core.client.JsonUtils;
+import com.vaadin.shared.communication.URLReference;
+import org.peimari.gleaflet.client.*;
 import org.peimari.gleaflet.client.draw.*;
 import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
 import org.vaadin.addon.leaflet.client.AbstractControlConnector;
@@ -24,6 +19,7 @@ import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
 import org.vaadin.addon.leaflet.client.LeafletPolygonConnector;
 import org.vaadin.addon.leaflet.client.LeafletRectangleConnector;
+import org.vaadin.addon.leaflet.draw.shared.*;
 
 @Connect(LDraw.class)
 public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
@@ -42,11 +38,44 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         FeatureGroup layerGroup = (FeatureGroup) fgc.getLayer();
         options.setEditableFeatureGroup(layerGroup);
 
-        DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.
-                create();
-        if (getState().drawVisibleButtons != null) {
-            buttonOptions.setVisibleButtons(getState().drawVisibleButtons);
+        DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.create();
+
+        if (getState().drawPolylineState.visible) {
+            DrawPolylineOptions polylineOptions = drawPolylineOptionsFor(getState().drawPolylineState);
+            buttonOptions.setPolyline(polylineOptions);
+        } else {
+            buttonOptions.setPolylineVisibility(false);
         }
+
+        if (getState().drawPolygonState.visible) {
+            DrawPolygonOptions polygonOptions = drawPolygonOptionsFor(getState().drawPolygonState);
+            buttonOptions.setPolygon(polygonOptions);
+        } else {
+            buttonOptions.setPolygonVisibility(false);
+        }
+
+        if (getState().drawRectangleState.visible) {
+            DrawRectangleOptions rectangleOptions = drawRectangleOptionsFor(getState().drawRectangleState);
+            buttonOptions.setRectangle(rectangleOptions);
+        } else {
+            buttonOptions.setRectangleVisibility(false);
+        }
+
+        if (getState().drawCircleState.visible) {
+            DrawCircleOptions circleOptions = drawCircleOptionsFor(getState().drawCircleState);
+            buttonOptions.setCircle(circleOptions);
+        } else {
+            buttonOptions.setCircleVisibility(false);
+        }
+
+        if (getState().drawMarkerState.visible) {
+            DrawMarkerOptions markerOptions = drawMarkerOptionsFor(getState().drawMarkerState, this);
+            buttonOptions.setMarker(markerOptions);
+        } else {
+            buttonOptions.setMarkerVisibility(false);
+        }
+
+
         options.setDraw(buttonOptions);
 
         Draw l = Draw.create(options);
@@ -139,6 +168,106 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         });
 
         return l;
+    }
+
+    public static DrawPolylineOptions drawPolylineOptionsFor(DrawPolylineState state) {
+        DrawPolylineOptions options = DrawPolylineOptions.create();
+        PathOptions polylinePathOptions = JsonUtils.safeEval(state.vectorStyleJson);
+        options.setShapeOptions((PolylineOptions) polylinePathOptions);
+
+        if (state.allowIntersection != null) {
+            options.setAllowIntersection(state.allowIntersection);
+        }
+        if (state.guidelineDistance != null) {
+            options.setGuidelineDistance(state.guidelineDistance);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
+        if (state.zIndexOffset != null) {
+            options.setZIndexOffset(state.zIndexOffset);
+        }
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    public static DrawPolygonOptions drawPolygonOptionsFor(DrawPolygonState state) {
+        DrawPolygonOptions options = DrawPolygonOptions.create();
+        PathOptions pathOptions = JsonUtils.safeEval(state.vectorStyleJson);
+        options.setShapeOptions((PolylineOptions)pathOptions);
+
+        if (state.showArea != null) {
+            options.setShowArea(state.showArea);
+        }
+        if (state.allowIntersection != null) {
+            options.setAllowIntersection(state.allowIntersection);
+        }
+        if (state.guidelineDistance != null) {
+            options.setGuidelineDistance(state.guidelineDistance);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
+        if (state.zIndexOffset != null) {
+            options.setZIndexOffset(state.zIndexOffset);
+        }
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    public static DrawRectangleOptions drawRectangleOptionsFor(DrawRectangleState state) {
+        DrawRectangleOptions options = DrawRectangleOptions.create();
+        PathOptions pathOptions = JsonUtils.safeEval(state.vectorStyleJson);
+        options.setShapeOptions(pathOptions);
+
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    public static DrawCircleOptions drawCircleOptionsFor(DrawCircleState state) {
+        DrawCircleOptions options = DrawCircleOptions.create();
+        PathOptions pathOptions = JsonUtils.safeEval(state.vectorStyleJson);
+        options.setShapeOptions(pathOptions);
+
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
+    }
+
+    public static DrawMarkerOptions drawMarkerOptionsFor(DrawMarkerState state, AbstractControlConnector c) {
+        DrawMarkerOptions options = DrawMarkerOptions.create();
+        URLReference urlReference = c.getState().resources.get("markerDrawIcon");
+        if (urlReference != null) {
+            IconOptions iconOptions = IconOptions.create();
+            iconOptions.setIconUrl(urlReference.getURL());
+
+            if (state.iconSize != null) {
+                iconOptions.setIconSize(Point.create(
+                        state.iconSize.getLat(),
+                        state.iconSize.getLon()));
+            }
+            if (state.iconAnchor != null) {
+                iconOptions.setIconAnchor(Point.create(
+                        state.iconAnchor.getLat(),
+                        state.iconAnchor.getLon()));
+            }
+            Icon icon = Icon.create(iconOptions);
+            options.setIcon(icon);
+        }
+        if (state.zIndexOffset != null) {
+            options.setZIndexOffset(state.zIndexOffset);
+        }
+        if (state.repeatMode != null) {
+            options.setRepeatMode(state.repeatMode);
+        }
+        return options;
     }
 
     protected void doStateChange(StateChangeEvent stateChangeEvent) {

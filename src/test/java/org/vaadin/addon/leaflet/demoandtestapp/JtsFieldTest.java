@@ -139,7 +139,8 @@ public class JtsFieldTest extends AbstractTest {
 		beanFieldGroup.setItemDataSource(pojo);
 		beanFieldGroup.bindMemberFields(this);
 
-		editorform.addComponent(new Button("Save", new ClickListener() {
+		HorizontalLayout buttonLayout = new HorizontalLayout();
+		buttonLayout.addComponent(new Button("Save", new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
@@ -151,6 +152,15 @@ public class JtsFieldTest extends AbstractTest {
 				}
 			}
 		}));
+
+		buttonLayout.addComponent(new Button("Toggle read only", new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				beanFieldGroup.setReadOnly(!beanFieldGroup.isReadOnly());
+			}
+		}));
+
+		editorform.addComponent(buttonLayout);
 
 		horizontalLayout.addComponents(editorform, display);
 		horizontalLayout.setExpandRatio(editorform, 1);
