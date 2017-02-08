@@ -4,6 +4,7 @@ import com.google.gwt.core.client.JsonUtils;
 import com.vaadin.shared.communication.URLReference;
 import org.peimari.gleaflet.client.*;
 import org.peimari.gleaflet.client.draw.*;
+import org.peimari.gleaflet.client.draw.LayerType;
 import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
 import org.vaadin.addon.leaflet.client.AbstractControlConnector;
 import org.vaadin.addon.leaflet.client.AbstractLeafletLayerConnector;
@@ -164,6 +165,48 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                             .getConnectorFor(iLayer);
                     rpc.layerDeleted(c);
                 }
+            }
+        });
+
+        getMap().addDrawStartListener(new DrawStartListener() {
+            @Override
+            public void onDrawStart(DrawStartEvent event) {
+                rpc.drawStart(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
+        getMap().addDrawStopListener(new DrawStopListener() {
+            @Override
+            public void onDrawStop(DrawStopEvent event) {
+                rpc.drawStop(org.vaadin.addon.leaflet.draw.shared.LayerType.valueOf(event.getRawLayerType()));
+            }
+        });
+
+        getMap().addEditStartListener(new EditStartListener() {
+            @Override
+            public void onEditStart(EditStartEvent event) {
+                rpc.editStart();
+            }
+        });
+
+        getMap().addEditStopListener(new EditStopListener() {
+            @Override
+            public void onEditStop(EditStopEvent event) {
+                rpc.editStop();
+            }
+        });
+
+        getMap().addDeleteStartListener(new DeleteStartListener() {
+            @Override
+            public void onDeleteStart(DeleteStartEvent event) {
+                rpc.deleteStart();
+            }
+        });
+
+        getMap().addDeleteStopListener(new DeleteStopListener() {
+            @Override
+            public void onDeleteStop(DeleteStopEvent event) {
+                rpc.deleteStop();
             }
         });
 
