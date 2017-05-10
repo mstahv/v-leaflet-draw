@@ -1,24 +1,19 @@
 package org.vaadin.addon.leaflet.demoandtestapp;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 
+import com.vaadin.data.ValidationException;
+import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.*;
 import org.vaadin.addon.leaflet.util.LineStringField;
 import org.vaadin.addon.leaflet.util.LinearRingField;
 import org.vaadin.addon.leaflet.util.PointField;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.Button;
+import com.vaadin.data.Binder;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.TabSheet;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
 import com.vividsolutions.jts.geom.LineString;
 import com.vividsolutions.jts.geom.LinearRing;
 import com.vividsolutions.jts.geom.Point;
@@ -29,7 +24,7 @@ public class JtsFieldTest extends AbstractTest {
 
 	public static class JtsPojo {
 		private String name;
-		private Date date;
+		private LocalDate date;
 		private Point point;
 		private LineString lineString;
 		private LinearRing linearRing;
@@ -43,11 +38,11 @@ public class JtsFieldTest extends AbstractTest {
 			this.name = name;
 		}
 
-		public Date getDate() {
+		public LocalDate getDate() {
 			return date;
 		}
 
-		public void setDate(Date date) {
+		public void setDate(LocalDate date) {
 			this.date = date;
 		}
 
@@ -134,10 +129,10 @@ public class JtsFieldTest extends AbstractTest {
 		editorform.setExpandRatio(jtsFields, 1);
 
 		// TODO switch to helper in Vaadin when available http://dev.vaadin.com/ticket/13068
-		final BeanFieldGroup<JtsPojo> beanFieldGroup = new BeanFieldGroup<JtsPojo>(
+		final Binder<JtsPojo> beanBinder = new Binder<JtsPojo>(
 				JtsPojo.class);
-		beanFieldGroup.setItemDataSource(pojo);
-		beanFieldGroup.bindMemberFields(this);
+		beanBinder.readBean(pojo);
+		beanBinder.bindInstanceFields(this);
 
 		HorizontalLayout buttonLayout = new HorizontalLayout();
 		buttonLayout.addComponent(new Button("Save", new ClickListener() {
@@ -145,20 +140,17 @@ public class JtsFieldTest extends AbstractTest {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					beanFieldGroup.commit();
+					beanBinder.writeBean(pojo);
 					display.setValue(pojo.toString());
-				} catch (CommitException e) {
-					e.printStackTrace();
+				} catch (ValidationException e) {
+					System.err.println("Validation errors:" + Arrays.toString(e.getBeanValidationErrors().toArray()));
 				}
 			}
 		}));
 
-		buttonLayout.addComponent(new Button("Toggle read only", new ClickListener() {
-			@Override
-			public void buttonClick(ClickEvent event) {
-				beanFieldGroup.setReadOnly(!beanFieldGroup.isReadOnly());
-			}
-		}));
+		CheckBox roCheckBox = new CheckBox("Read only", false);
+		roCheckBox.addValueChangeListener(event -> beanBinder.setReadOnly(event.getValue()));
+		buttonLayout.addComponent(roCheckBox);
 
 		editorform.addComponent(buttonLayout);
 

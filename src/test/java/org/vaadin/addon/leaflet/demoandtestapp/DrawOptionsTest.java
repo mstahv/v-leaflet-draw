@@ -1,6 +1,6 @@
 package org.vaadin.addon.leaflet.demoandtestapp;
 
-import com.vaadin.data.Property;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -125,11 +125,10 @@ public class DrawOptionsTest extends AbstractTest {
 
         final CheckBox checkBox = new CheckBox("Drawing mode");
         checkBox.setValue(true);
-        checkBox.setImmediate(true);
-        checkBox.addValueChangeListener(new Property.ValueChangeListener() {
+        checkBox.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
 
             @Override
-            public void valueChange(Property.ValueChangeEvent event) {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> valueChangeEvent) {
                 if(checkBox.getValue()) {
                     enableDrawing();
                 } else {

@@ -1,7 +1,11 @@
 package org.vaadin.addon.leaflet.demoandtestapp;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 
+import com.vaadin.data.Binder;
+import com.vaadin.data.ValidationException;
 import org.geotools.geometry.jts.JTS;
 import org.geotools.referencing.CRS;
 import org.opengis.geometry.MismatchedDimensionException;
@@ -16,9 +20,7 @@ import org.vaadin.addon.leaflet.util.LineStringField;
 import org.vaadin.addon.leaflet.util.LinearRingField;
 import org.vaadin.addon.leaflet.util.PointField;
 
-import com.vaadin.data.fieldgroup.BeanFieldGroup;
-import com.vaadin.data.fieldgroup.FieldGroup.CommitException;
-import com.vaadin.shared.ui.label.ContentMode;
+import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -45,7 +47,7 @@ public class JtsFieldWithProjectionTest extends AbstractTest {
 
 	public static class JtsPojo {
 		private String name;
-		private Date date;
+		private LocalDate date;
 		private Point point;
 		private LineString lineString;
 		private LinearRing linearRing;
@@ -59,11 +61,11 @@ public class JtsFieldWithProjectionTest extends AbstractTest {
 			this.name = name;
 		}
 
-		public Date getDate() {
+		public LocalDate getDate() {
 			return date;
 		}
 
-		public void setDate(Date date) {
+		public void setDate(LocalDate date) {
 			this.date = date;
 		}
 
@@ -211,24 +213,23 @@ public class JtsFieldWithProjectionTest extends AbstractTest {
 
 		// TODO switch to helper in Vaadin when available
 		// http://dev.vaadin.com/ticket/13068
-		final BeanFieldGroup<JtsPojo> beanFieldGroup = new BeanFieldGroup<JtsPojo>(
+		final Binder<JtsPojo> beanFieldGroup = new Binder<JtsPojo>(
 				JtsPojo.class);
-		beanFieldGroup.setItemDataSource(pojo);
-		beanFieldGroup.bindMemberFields(this);
+		beanFieldGroup.readBean(pojo);
+		beanFieldGroup.bindInstanceFields(this);
 
 		Button c = new Button("Save", new ClickListener() {
 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				try {
-					beanFieldGroup.commit();
+					beanFieldGroup.writeBean(pojo);
 					display.setValue(pojo.toString());
-				} catch (CommitException e) {
-					e.printStackTrace();
+				} catch (ValidationException e) {
+					System.err.println("Validation errors:" + Arrays.toString(e.getBeanValidationErrors().toArray()));
 				}
 			}
 		});
-		c.setImmediate(true);
 		c.setId("SSS");
 		editorform.addComponent(c);
 

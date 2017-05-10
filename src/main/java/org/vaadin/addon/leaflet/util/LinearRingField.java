@@ -25,11 +25,6 @@ public class LinearRingField extends AbstractJTSField<LinearRing> {
 		setCaption(caption);
 	}
 
-	@Override
-	public Class<? extends LinearRing> getType() {
-		return LinearRing.class;
-	}
-
 	LEditing editing = null;
 
 	protected void prepareEditing() {
@@ -38,7 +33,7 @@ public class LinearRingField extends AbstractJTSField<LinearRing> {
 			map.addLayer(lPolygon);
 		}
 		Point[] lPointArray = JTSUtil.toLeafletPointArray(getCrsTranslator()
-				.toPresentation(getInternalValue()));
+				.toPresentation(getValue()));
 		lPolygon.setPoints(lPointArray);
 		editing = new LEditing(lPolygon);
 		editing.addFeatureModifiedListener(new FeatureModifiedListener() {
