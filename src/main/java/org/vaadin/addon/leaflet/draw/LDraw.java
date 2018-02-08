@@ -4,12 +4,7 @@ import java.lang.reflect.Method;
 import java.util.EventObject;
 
 import com.vaadin.server.Resource;
-import org.vaadin.addon.leaflet.LCircle;
-import org.vaadin.addon.leaflet.LFeatureGroup;
-import org.vaadin.addon.leaflet.LMarker;
-import org.vaadin.addon.leaflet.LPolygon;
-import org.vaadin.addon.leaflet.LPolyline;
-import org.vaadin.addon.leaflet.LeafletLayer;
+import org.vaadin.addon.leaflet.*;
 import org.vaadin.addon.leaflet.control.AbstractControl;
 import org.vaadin.addon.leaflet.draw.client.LeafletDrawServerRcp;
 import org.vaadin.addon.leaflet.draw.shared.LayerType;
@@ -20,7 +15,6 @@ import org.vaadin.addon.leaflet.shared.Point;
 import com.vaadin.server.AbstractClientConnector;
 import com.vaadin.shared.Connector;
 import com.vaadin.util.ReflectTools;
-import org.vaadin.addon.leaflet.LRectangle;
 import org.vaadin.addon.leaflet.shared.Bounds;
 
 /**
@@ -309,6 +303,12 @@ public class LDraw extends AbstractControl {
             }
 
             @Override
+            public void circleMarkerDrawn(Point point, double radius) {
+                LCircleMarker circleMarker = new LCircleMarker(point, radius);
+                fireEvent(new FeatureDrawnEvent(LDraw.this, circleMarker));
+            }
+
+            @Override
             public void rectangleDrawn(Bounds bounds) {
                 LRectangle rectangle = new LRectangle(bounds);
                 rectangle.setStyle(rectangleDrawStyle);
@@ -342,6 +342,14 @@ public class LDraw extends AbstractControl {
                 c.setRadius(radius);
                 c.setPoint(latLng);
                 fireEvent(new FeatureModifiedEvent(LDraw.this, c));
+            }
+
+            @Override
+            public void circleMarkerModified(Connector cc, Point latLng, double radius) {
+                LCircleMarker cm = (LCircleMarker) cc;
+                cm.setRadius(radius);
+                cm.setPoint(latLng);
+                fireEvent(new FeatureModifiedEvent(LDraw.this, cm));
             }
 
             @Override
@@ -414,6 +422,7 @@ public class LDraw extends AbstractControl {
         getState().drawPolygonState.vectorStyleJson = polygonDrawStyle != null ? polygonDrawStyle.asJson() : "{}";
         getState().drawRectangleState.vectorStyleJson = rectangleDrawStyle != null ? rectangleDrawStyle.asJson() : "{}";
         getState().drawCircleState.vectorStyleJson = circleDrawStyle != null ? circleDrawStyle.asJson() : "{}";
+        getState().editHandlerState.selectedPathState.vectorStyleJson = editPathStyle != null ? editPathStyle.asJson() : "{}";
         super.beforeClientResponse(initial);
     }
 
@@ -425,6 +434,7 @@ public class LDraw extends AbstractControl {
     private VectorStyle polygonDrawStyle;
     private VectorStyle rectangleDrawStyle;
     private VectorStyle circleDrawStyle;
+    private VectorStyle editPathStyle;
 
 
     public void setPolylineDrawHandlerVisible(Boolean visible) {
@@ -502,7 +512,7 @@ public class LDraw extends AbstractControl {
     }
 
 
-    public void setCircleDrawHandlerVisible(boolean visible) {
+    public void setCircleDrawHandlerVisible(Boolean visible) {
         getState().drawCircleState.visible = visible;
     }
 
@@ -514,6 +524,14 @@ public class LDraw extends AbstractControl {
         getState().drawCircleState.repeatMode = repeatMode;
     }
 
+
+    public void setCircleMarkerDrawHandlerVisible(Boolean visible) {
+        getState().drawCircleMarkerState.visible = visible;
+    }
+
+    public void setCircleMarkerDrawRepeatMode(Boolean repeatMode) {
+        getState().drawCircleMarkerState.repeatMode = repeatMode;
+    }
 
     public void setMarkerDrawHandlerVisible(boolean visible) {
         getState().drawMarkerState.visible = visible;
@@ -530,4 +548,21 @@ public class LDraw extends AbstractControl {
     public void setMarkerDrawIconSize(Point size) {
         getState().drawMarkerState.iconSize = size;
     }
+
+    public void setEditHandlerVisible(boolean visible) {
+        getState().editHandlerState.visible = visible;
+    }
+
+    public void setEditPathStyle(VectorStyle style) {
+        this.editPathStyle = style;
+    }
+
+    public void setEditMaintainColor(boolean maintainColor) {
+        getState().editHandlerState.selectedPathState.maintainColor = maintainColor;
+    }
+
+    public void setDeleteHandlerVisible(boolean visible) {
+        getState().deleteHandlerState.visible = visible;
+    }
+
 }

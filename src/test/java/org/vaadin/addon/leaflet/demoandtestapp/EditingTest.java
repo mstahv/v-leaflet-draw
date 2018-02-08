@@ -91,9 +91,9 @@ public class EditingTest extends AbstractTest implements
 		}
 		
 		AbstractJTSField<LinearRing> c = new LinearRingField("Linear ring");
-		LPolygon polygon = new LPolygon(new Point(0, 0), new Point(30, 30),
+		LPolyline polyline = new LPolyline(new Point(0, 0), new Point(30, 30),
 				new Point(30, 0));
-		LinearRing ring = JTSUtil.toLinearRing(polygon);
+		LinearRing ring = JTSUtil.toLinearRing(polyline);
 		c.setValue(ring);
 		c.setHeight("200px");
 		c.setWidth("200px");

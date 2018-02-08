@@ -13,6 +13,8 @@ public interface LeafletDrawServerRcp extends ServerRpc {
 
     public void circleDrawn(Point point, double radius);
 
+    public void circleMarkerDrawn(Point point, double radius);
+
     public void polygonDrawn(Point[] latLngs);
 
     public void rectangleDrawn(Bounds bounds);
@@ -36,6 +38,9 @@ public interface LeafletDrawServerRcp extends ServerRpc {
     public void markerModified(Connector mc, Point newPoint);
 
     public void circleModified(Connector cc, Point latLng,
+            double radius);
+
+    public void circleMarkerModified(Connector cc, Point latLng,
             double radius);
 
     public void polylineModified(Connector plc,
