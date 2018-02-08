@@ -5,14 +5,9 @@ import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LLayerGroup;
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LTileLayer;
-import org.vaadin.addon.leaflet.draw.AbstracLDrawFeature;
+import org.vaadin.addon.leaflet.draw.*;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnListener;
-import org.vaadin.addon.leaflet.draw.LDrawCircle;
-import org.vaadin.addon.leaflet.draw.LDrawMarker;
-import org.vaadin.addon.leaflet.draw.LDrawPolygon;
-import org.vaadin.addon.leaflet.draw.LDrawPolyline;
-import org.vaadin.addon.leaflet.draw.LDrawRectangle;
 
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -58,7 +53,7 @@ public class DrawWithoutToolbarTest extends AbstractTest {
 	private Component getControls() {
 
 		List<Class> dataList = Arrays.asList(LDrawPolyline.class, LDrawPolygon.class, LDrawRectangle.class,
-				LDrawMarker.class, LDrawCircle.class);
+				LDrawMarker.class, LDrawCircle.class, LDrawCircleMarker.class);
 		final RadioButtonGroup<Class> radioButtonGroup = new RadioButtonGroup<>("Draw Shape");
 		radioButtonGroup.setItems(dataList);
 		radioButtonGroup.setItemCaptionGenerator(new ItemCaptionGenerator<Class>() {

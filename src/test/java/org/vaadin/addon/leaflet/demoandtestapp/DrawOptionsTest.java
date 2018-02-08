@@ -80,6 +80,10 @@ public class DrawOptionsTest extends AbstractTest {
         draw.setMarkerDrawIconAnchor(new Point(24,20));
         draw.setMarkerDrawIconSize(new Point(20,20));
 
+        //test edit draw options
+        draw.setEditHandlerVisible(false);  //hide the edit button
+        draw.setDeleteHandlerVisible(false);  //hide the delete button
+
         leafletMap.addControl(draw);
 
         draw.addFeatureDrawnListener(new LDraw.FeatureDrawnListener() {

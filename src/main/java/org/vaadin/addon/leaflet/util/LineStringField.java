@@ -26,7 +26,7 @@ public class LineStringField extends AbstractJTSField<LineString> {
 
 	LEditing editing = null;
 
-	protected void prepareEditing() {
+	protected void prepareEditing(boolean userOriginatedValueChange) {
 		if (lPolyline == null) {
 			lPolyline = new LPolyline();
 			map.addLayer(lPolyline);

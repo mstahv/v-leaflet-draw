@@ -1,21 +1,20 @@
 package org.vaadin.addon.leaflet.util;
 
-import org.vaadin.addon.leaflet.LPolygon;
+import com.vividsolutions.jts.geom.LinearRing;
+import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnListener;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedListener;
-import org.vaadin.addon.leaflet.draw.LDrawPolygon;
+import org.vaadin.addon.leaflet.draw.LDrawPolyline;
 import org.vaadin.addon.leaflet.draw.LEditing;
 import org.vaadin.addon.leaflet.shared.Bounds;
 import org.vaadin.addon.leaflet.shared.Point;
 
-import com.vividsolutions.jts.geom.LinearRing;
-
 public class LinearRingField extends AbstractJTSField<LinearRing> {
 
-	private LPolygon lPolygon;
-        private LDrawPolygon drawPolyline;
+	private LPolyline lPolyline;
+	private LDrawPolyline lDrawPolyline;
 
 	public LinearRingField() {
 	}
@@ -27,36 +26,36 @@ public class LinearRingField extends AbstractJTSField<LinearRing> {
 
 	LEditing editing = null;
 
-	protected void prepareEditing() {
-		if (lPolygon == null) {
-			lPolygon = new LPolygon();
-			map.addLayer(lPolygon);
+	protected void prepareEditing(boolean userOriginatedValueChange) {
+		if (lPolyline == null) {
+			lPolyline = new LPolyline();
+			map.addLayer(lPolyline);
 		}
 		Point[] lPointArray = JTSUtil.toLeafletPointArray(getCrsTranslator()
 				.toPresentation(getValue()));
-		lPolygon.setPoints(lPointArray);
-		editing = new LEditing(lPolygon);
+		lPolyline.setPoints(lPointArray);
+		editing = new LEditing(lPolyline);
 		editing.addFeatureModifiedListener(new FeatureModifiedListener() {
 
 			@Override
 			public void featureModified(FeatureModifiedEvent event) {
 				setValue(getCrsTranslator().toModel(
-						JTSUtil.toLinearRing(lPolygon)));
+						JTSUtil.toLinearRing(lPolyline)));
 			}
 		});
-		map.zoomToExtent(new Bounds(lPolygon.getPoints()));
+		map.zoomToExtent(new Bounds(lPolyline.getPoints()));
 	}
 
 	protected void prepareDrawing() {
-	   	if(drawPolyline != null) {
-	   	   drawPolyline.remove();
+	   	if(lDrawPolyline != null) {
+	   	   lDrawPolyline.remove();
 	   	}
-	   	if(lPolygon != null) {
-	   	   map.removeLayer(lPolygon);
-	   	   lPolygon = null;
+	   	if(lPolyline != null) {
+	   	   map.removeLayer(lPolyline);
+	   	   lPolyline = null;
 	   	}
-		drawPolyline = new LDrawPolygon(map);
-		drawPolyline.addFeatureDrawnListener(new FeatureDrawnListener() {
+		lDrawPolyline = new LDrawPolyline();
+		lDrawPolyline.addFeatureDrawnListener(new FeatureDrawnListener() {
 
 			@Override
 			public void featureDrawn(FeatureDrawnEvent event) {
@@ -65,7 +64,7 @@ public class LinearRingField extends AbstractJTSField<LinearRing> {
 				// usual that has some irrelevant stuff in front
 				setValue(getCrsTranslator()
 						.toModel(
-								JTSUtil.toLinearRing((LPolygon) event
+								JTSUtil.toLinearRing((LPolyline) event
 										.getDrawnFeature())));
 			}
 		});

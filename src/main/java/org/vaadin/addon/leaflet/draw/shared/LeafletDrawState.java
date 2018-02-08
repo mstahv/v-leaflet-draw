@@ -32,4 +32,8 @@ public class LeafletDrawState extends LeafletControlState {
 	public DrawRectangleState drawRectangleState = new DrawRectangleState();
 	public DrawCircleState drawCircleState = new DrawCircleState();
 	public DrawMarkerState drawMarkerState = new DrawMarkerState();
+	public DrawCircleMarkerState drawCircleMarkerState = new DrawCircleMarkerState();
+
+	public EditHandlerState editHandlerState = new EditHandlerState();
+	public DeleteHandlerState deleteHandlerState = new DeleteHandlerState();
 }
