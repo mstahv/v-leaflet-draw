@@ -24,20 +24,15 @@ public class LineStringField extends AbstractJTSField<LineString> {
 		setCaption(caption);
 	}
 
-	@Override
-	public Class<? extends LineString> getType() {
-		return LineString.class;
-	}
-
 	LEditing editing = null;
 
-	protected void prepareEditing() {
+	protected void prepareEditing(boolean userOriginatedValueChange) {
 		if (lPolyline == null) {
 			lPolyline = new LPolyline();
 			map.addLayer(lPolyline);
 		}
 		Point[] lPointArray = JTSUtil.toLeafletPointArray(getCrsTranslator()
-				.toPresentation(getInternalValue()));
+				.toPresentation(getValue()));
 		lPolyline.setPoints(lPointArray);
 		editing = new LEditing(lPolyline);
 		editing.addFeatureModifiedListener(new FeatureModifiedListener() {

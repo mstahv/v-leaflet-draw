@@ -1,6 +1,6 @@
 package org.vaadin.addon.leaflet.demoandtestapp;
 
-import com.vaadin.data.Property;
+import com.vaadin.data.HasValue;
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
@@ -80,6 +80,10 @@ public class DrawOptionsTest extends AbstractTest {
         draw.setMarkerDrawIconAnchor(new Point(24,20));
         draw.setMarkerDrawIconSize(new Point(20,20));
 
+        //test edit draw options
+        draw.setEditHandlerVisible(false);  //hide the edit button
+        draw.setDeleteHandlerVisible(false);  //hide the delete button
+
         leafletMap.addControl(draw);
 
         draw.addFeatureDrawnListener(new LDraw.FeatureDrawnListener() {
@@ -125,11 +129,10 @@ public class DrawOptionsTest extends AbstractTest {
 
         final CheckBox checkBox = new CheckBox("Drawing mode");
         checkBox.setValue(true);
-        checkBox.setImmediate(true);
-        checkBox.addValueChangeListener(new Property.ValueChangeListener() {
+        checkBox.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
 
             @Override
-            public void valueChange(Property.ValueChangeEvent event) {
+            public void valueChange(HasValue.ValueChangeEvent<Boolean> valueChangeEvent) {
                 if(checkBox.getValue()) {
                     enableDrawing();
                 } else {
