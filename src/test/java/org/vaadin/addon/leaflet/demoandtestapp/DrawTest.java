@@ -2,7 +2,6 @@ package org.vaadin.addon.leaflet.demoandtestapp;
 
 import java.util.Arrays;
 
-import com.vaadin.data.HasValue;
 import org.vaadin.addon.leaflet.LFeatureGroup;
 import org.vaadin.addon.leaflet.LMap;
 import org.vaadin.addon.leaflet.LPolyline;
@@ -15,6 +14,8 @@ import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureModifiedListener;
 import org.vaadin.addon.leaflet.shared.Point;
 
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
@@ -101,10 +102,11 @@ public class DrawTest extends AbstractTest {
 		
 		final CheckBox checkBox = new CheckBox("Drawing mode");
 		checkBox.setValue(true);
+		checkBox.setImmediate(true);
+		checkBox.addValueChangeListener(new ValueChangeListener() {
 
-		checkBox.addValueChangeListener(new HasValue.ValueChangeListener<Boolean>() {
 			@Override
-			public void valueChange(HasValue.ValueChangeEvent<Boolean> valueChangeEvent) {
+			public void valueChange(ValueChangeEvent event) {
 				if(checkBox.getValue()) {
 					enableDrawing();
 				} else {
