@@ -6,20 +6,12 @@ import org.peimari.gleaflet.client.*;
 import org.peimari.gleaflet.client.draw.*;
 import org.peimari.gleaflet.client.draw.LayerType;
 import org.peimari.gleaflet.client.resources.LeafletDrawResourceInjector;
-import org.vaadin.addon.leaflet.client.AbstractControlConnector;
-import org.vaadin.addon.leaflet.client.AbstractLeafletLayerConnector;
-import org.vaadin.addon.leaflet.client.LeafletCircleConnector;
-import org.vaadin.addon.leaflet.client.LeafletFeatureGroupConnector;
-import org.vaadin.addon.leaflet.client.LeafletMarkerConnector;
-import org.vaadin.addon.leaflet.client.LeafletPolylineConnector;
-import org.vaadin.addon.leaflet.client.U;
+import org.vaadin.addon.leaflet.client.*;
 import org.vaadin.addon.leaflet.draw.LDraw;
 
 import com.vaadin.client.communication.RpcProxy;
 import com.vaadin.client.communication.StateChangeEvent;
 import com.vaadin.shared.ui.Connect;
-import org.vaadin.addon.leaflet.client.LeafletPolygonConnector;
-import org.vaadin.addon.leaflet.client.LeafletRectangleConnector;
 import org.vaadin.addon.leaflet.draw.shared.*;
 
 @Connect(LDraw.class)
@@ -35,49 +27,71 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
     @Override
     protected Draw createControl() {
         DrawControlOptions options = DrawControlOptions.create();
+        DrawControlButtonOptions drawOptions = DrawControlButtonOptions.create();
+        DrawControlEditOptions editOptions = DrawControlEditOptions.create();
+
         final LeafletFeatureGroupConnector fgc = (LeafletFeatureGroupConnector) getState().featureGroup;
         FeatureGroup layerGroup = (FeatureGroup) fgc.getLayer();
-        options.setEditableFeatureGroup(layerGroup);
+        editOptions.setFeatureGroup(layerGroup);
 
-        DrawControlButtonOptions buttonOptions = DrawControlButtonOptions.create();
+        if (getState().editHandlerState.visible) {
+            DrawControlEditHandlerOptions editHandlerOptions = editHandlerOptionsFor(getState().editHandlerState);
+            editOptions.setEditHandler(editHandlerOptions);
+        } else {
+            editOptions.disableEditHandler();
+        }
+
+        if (getState().deleteHandlerState.visible) {
+            DrawControlDeleteHandlerOptions deleteHandlerOptions = deleteHandlerOptionsFor(getState().deleteHandlerState);
+            editOptions.setDeleteHandler(deleteHandlerOptions);
+        } else {
+            editOptions.disableDeleteHandler();
+        }
 
         if (getState().drawPolylineState.visible) {
             DrawPolylineOptions polylineOptions = drawPolylineOptionsFor(getState().drawPolylineState);
-            buttonOptions.setPolyline(polylineOptions);
+            drawOptions.setPolyline(polylineOptions);
         } else {
-            buttonOptions.setPolylineVisibility(false);
+            drawOptions.setPolylineVisibility(false);
         }
 
         if (getState().drawPolygonState.visible) {
             DrawPolygonOptions polygonOptions = drawPolygonOptionsFor(getState().drawPolygonState);
-            buttonOptions.setPolygon(polygonOptions);
+            drawOptions.setPolygon(polygonOptions);
         } else {
-            buttonOptions.setPolygonVisibility(false);
+            drawOptions.setPolygonVisibility(false);
         }
 
         if (getState().drawRectangleState.visible) {
             DrawRectangleOptions rectangleOptions = drawRectangleOptionsFor(getState().drawRectangleState);
-            buttonOptions.setRectangle(rectangleOptions);
+            drawOptions.setRectangle(rectangleOptions);
         } else {
-            buttonOptions.setRectangleVisibility(false);
+            drawOptions.setRectangleVisibility(false);
         }
 
         if (getState().drawCircleState.visible) {
             DrawCircleOptions circleOptions = drawCircleOptionsFor(getState().drawCircleState);
-            buttonOptions.setCircle(circleOptions);
+            drawOptions.setCircle(circleOptions);
         } else {
-            buttonOptions.setCircleVisibility(false);
+            drawOptions.setCircleVisibility(false);
         }
 
         if (getState().drawMarkerState.visible) {
             DrawMarkerOptions markerOptions = drawMarkerOptionsFor(getState().drawMarkerState, this);
-            buttonOptions.setMarker(markerOptions);
+            drawOptions.setMarker(markerOptions);
         } else {
-            buttonOptions.setMarkerVisibility(false);
+            drawOptions.setMarkerVisibility(false);
         }
 
+        if (getState().drawCircleMarkerState.visible) {
+            DrawCircleMarkerOptions circleMarkerOptions = drawCircleMarkerOptionsFor(getState().drawCircleMarkerState);
+            drawOptions.setCircleMarker(circleMarkerOptions);
+        } else {
+            drawOptions.setCircleMarkerVisibility(false);
+        }
 
-        options.setDraw(buttonOptions);
+        options.setDraw(drawOptions);
+        options.setEdit(editOptions);
 
         Draw l = Draw.create(options);
 
@@ -95,6 +109,10 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                     case circle:
                         Circle c = (Circle) event.getLayer();
                         rpc.circleDrawn(U.toPoint(c.getLatLng()), c.getRadius());
+                        break;
+                    case circlemarker:
+                        CircleMarker cm = (CircleMarker) event.getLayer();
+                        rpc.circleMarkerDrawn(U.toPoint(cm.getLatLng()), cm.getRadius());
                         break;
                     case rectangle:
                         Rectangle r = (Rectangle) event.getLayer();
@@ -133,6 +151,12 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
                             rpc.circleModified(cc,
                                     U.toPoint(circle.getLatLng()),
                                     circle.getRadius());
+                        } else if (c instanceof LeafletCircleMarkerConnector) {
+                            LeafletCircleMarkerConnector cmc = (LeafletCircleMarkerConnector) c;
+                            CircleMarker circleMarker = (CircleMarker) cmc.getLayer();
+                            rpc.circleMarkerModified(cmc,
+                                    U.toPoint(circleMarker.getLatLng()),
+                                    circleMarker.getRadius());
                         } else if (c instanceof LeafletRectangleConnector) {
                             LeafletRectangleConnector rc = (LeafletRectangleConnector) c;
                             Rectangle polyline = (Rectangle) rc.getLayer();
@@ -312,6 +336,28 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         }
         return options;
     }
+
+    public static DrawCircleMarkerOptions drawCircleMarkerOptionsFor(DrawHandlerState state) {
+        return DrawCircleMarkerOptions.create();
+    }
+
+    public static DrawControlEditHandlerOptions editHandlerOptionsFor(EditHandlerState state) {
+        DrawControlEditHandlerOptions options = DrawControlEditHandlerOptions.create();
+        PathOptions pathOptions = JsonUtils.safeEval(state.selectedPathState.vectorStyleJson);
+        SelectedPathOptions selectedPathOptions = pathOptions.cast();
+
+        if (state.selectedPathState.maintainColor != null) {
+            selectedPathOptions.setMaintainColor(state.selectedPathState.maintainColor);
+        }
+        options.setSelectedPathOptions(selectedPathOptions);
+
+        return options;
+    }
+
+    public static DrawControlDeleteHandlerOptions deleteHandlerOptionsFor(DeleteHandlerState state) {
+        return DrawControlDeleteHandlerOptions.create();
+    }
+
 
     protected void doStateChange(StateChangeEvent stateChangeEvent) {
 
