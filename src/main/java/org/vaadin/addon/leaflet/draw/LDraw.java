@@ -457,6 +457,18 @@ public class LDraw extends AbstractControl {
         getState().drawPolylineState.metric = metric;
     }
 
+    public void setPolylineDrawShowLength(Boolean showLength) {
+        getState().drawPolylineState.showLength = showLength;
+    }
+
+    public void setPolylineDrawFeet(Boolean feet) {
+        getState().drawPolylineState.feet = feet;
+    }
+
+    public void setPolylineDrawNautic(Boolean nautic) {
+        getState().drawPolylineState.nautic = nautic;
+    }
+
     public void setPolylineDrawZIndexOffset(Integer zIndexOffset) {
         getState().drawPolylineState.zIndexOffset = zIndexOffset;
     }
@@ -472,6 +484,10 @@ public class LDraw extends AbstractControl {
 
     public void setPolygonDrawShowArea(Boolean showArea) {
         getState().drawPolygonState.showArea = showArea;
+    }
+
+    public void setPolygonDrawShowLength(Boolean showLength) {
+        getState().drawPolygonState.showLength = showLength;
     }
 
     public void setPolygonDrawAllowIntersection(Boolean allowIntersection) {
@@ -511,6 +527,14 @@ public class LDraw extends AbstractControl {
         getState().drawRectangleState.repeatMode = repeatMode;
     }
 
+    public void setRectangleDrawShowArea(Boolean showArea) {
+        getState().drawRectangleState.showArea = showArea;
+    }
+
+    public void setRectangleDrawMetric(Boolean metric) {
+        getState().drawRectangleState.metric = metric;
+    }
+
 
     public void setCircleDrawHandlerVisible(Boolean visible) {
         getState().drawCircleState.visible = visible;
@@ -522,6 +546,22 @@ public class LDraw extends AbstractControl {
 
     public void setCircleDrawRepeatMode(Boolean repeatMode) {
         getState().drawCircleState.repeatMode = repeatMode;
+    }
+
+    public void setCircleDrawShowRadius(Boolean showRadius) {
+        getState().drawCircleState.showRadius = showRadius;
+    }
+
+    public void setCircleDrawMetric(Boolean metric) {
+        getState().drawCircleState.metric = metric;
+    }
+
+    public void setCircleDrawFeet(Boolean feet) {
+        getState().drawCircleState.feet = feet;
+    }
+
+    public void setCircleDrawNautic(Boolean nautic) {
+        getState().drawCircleState.nautic = nautic;
     }
 
 

@@ -2,14 +2,14 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.addon</groupId>
     <artifactId>v-leaflet-draw</artifactId>
-    <version>0.6.6</version>
+    <version>0.6.7</version>
     <name>V-Leaflet-Draw</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vaadin.version>7.7.9</vaadin.version>
         <v-leaflet-version>1.0.7-SNAPSHOT</v-leaflet-version>
-        <g-leaflet-draw-version>0.4.14</g-leaflet-draw-version>
+        <g-leaflet-draw-version>0.4.15</g-leaflet-draw-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <geotools.version>10.2</geotools.version>

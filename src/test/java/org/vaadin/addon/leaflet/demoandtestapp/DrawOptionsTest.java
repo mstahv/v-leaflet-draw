@@ -3,6 +3,7 @@ package org.vaadin.addon.leaflet.demoandtestapp;
 import com.vaadin.data.Property;
 import com.vaadin.server.ClassResource;
 import com.vaadin.ui.CheckBox;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
 import org.vaadin.addon.leaflet.LFeatureGroup;
@@ -24,8 +25,9 @@ public class DrawOptionsTest extends AbstractTest {
     }
 
     private LMap leafletMap;
-    private LDraw draw = new LDraw();
+    private LDraw draw;
     private LFeatureGroup group;
+    private Boolean metric;
 
     @Override
     public Component getTestComponent() {
@@ -50,6 +52,15 @@ public class DrawOptionsTest extends AbstractTest {
     private void enableDrawing() {
         draw = new LDraw();
         draw.setEditableFeatureGroup(group);
+
+        //test measurement system draw options
+        if (metric == null) {
+            draw.setPolylineDrawShowLength(false);
+            draw.setCircleDrawShowRadius(false);
+        } else {
+            draw.setPolylineDrawMetric(metric);
+            draw.setCircleDrawMetric(metric);
+        }
 
         //test polyline draw options
         VectorStyle polylineDrawStyle = new VectorStyle();
@@ -144,5 +155,23 @@ public class DrawOptionsTest extends AbstractTest {
         content.addComponent(checkBox);
 
 
+        final ComboBox measurementSystemCb = new ComboBox("Measurement System");
+        measurementSystemCb.addItems("Metric", "Imperial", "None");
+        measurementSystemCb.setValue("None");
+        measurementSystemCb.setNullSelectionAllowed(false);
+        measurementSystemCb.addValueChangeListener(new Property.ValueChangeListener() {
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                String cbVal = event.getProperty().getValue().toString();
+                if ("None".equals(cbVal)) {
+                    metric = null;
+                } else {
+                    metric = "Metric".equals(cbVal);
+                }
+                leafletMap.removeControl(draw);
+                enableDrawing();
+            }
+        });
+        content.addComponent(measurementSystemCb);
     }
 }

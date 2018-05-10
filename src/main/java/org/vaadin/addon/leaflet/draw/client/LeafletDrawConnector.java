@@ -248,8 +248,17 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         if (state.guidelineDistance != null) {
             options.setGuidelineDistance(state.guidelineDistance);
         }
+        if (state.showLength != null) {
+            options.setShowLength(state.showLength);
+        }
         if (state.metric != null) {
             options.setMetric(state.metric);
+        }
+        if (state.feet != null) {
+            options.setFeet(state.feet);
+        }
+        if (state.nautic != null) {
+            options.setNautic(state.nautic);
         }
         if (state.zIndexOffset != null) {
             options.setZIndexOffset(state.zIndexOffset);
@@ -267,6 +276,9 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 
         if (state.showArea != null) {
             options.setShowArea(state.showArea);
+        }
+        if (state.showLength != null) {
+            options.setShowLength(state.showLength);
         }
         if (state.allowIntersection != null) {
             options.setAllowIntersection(state.allowIntersection);
@@ -294,6 +306,12 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
         if (state.repeatMode != null) {
             options.setRepeatMode(state.repeatMode);
         }
+        if (state.showArea != null) {
+            options.setShowArea(state.showArea);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
         return options;
     }
 
@@ -304,6 +322,18 @@ public class LeafletDrawConnector extends AbstractControlConnector<Draw> {
 
         if (state.repeatMode != null) {
             options.setRepeatMode(state.repeatMode);
+        }
+        if (state.showRadius != null) {
+            options.setShowRadius(state.showRadius);
+        }
+        if (state.metric != null) {
+            options.setMetric(state.metric);
+        }
+        if (state.feet != null) {
+            options.setFeet(state.feet);
+        }
+        if (state.nautic != null) {
+            options.setNautic(state.nautic);
         }
         return options;
     }
