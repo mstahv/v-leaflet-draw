@@ -10,7 +10,7 @@ import org.vaadin.addon.leaflet.draw.LEditing;
 import org.vaadin.addon.leaflet.shared.Bounds;
 import org.vaadin.addon.leaflet.shared.Point;
 
-import com.vividsolutions.jts.geom.LineString;
+import org.locationtech.jts.geom.LineString;
 
 public class LineStringField extends AbstractJTSField<LineString> {
 

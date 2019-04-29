@@ -11,7 +11,7 @@ import org.vaadin.addon.leaflet.draw.LDrawRectangle;
 
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Notification;
-import com.vividsolutions.jts.geom.Geometry;
+import org.locationtech.jts.geom.Geometry;
 import org.vaadin.addonhelpers.AbstractTest;
 
 public class SelectRectangularArea extends AbstractTest {

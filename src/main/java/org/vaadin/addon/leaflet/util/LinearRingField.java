@@ -1,6 +1,6 @@
 package org.vaadin.addon.leaflet.util;
 
-import com.vividsolutions.jts.geom.LinearRing;
+import org.locationtech.jts.geom.LinearRing;
 import org.vaadin.addon.leaflet.LPolyline;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnEvent;
 import org.vaadin.addon.leaflet.draw.LDraw.FeatureDrawnListener;

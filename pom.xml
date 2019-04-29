@@ -2,17 +2,17 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.vaadin.addon</groupId>
     <artifactId>v-leaflet-draw</artifactId>
-    <version>0.6.7</version>
+    <version>1.1.0</version>
     <name>V-Leaflet-Draw</name>
     
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <vaadin.version>7.7.9</vaadin.version>
-        <v-leaflet-version>1.0.7-SNAPSHOT</v-leaflet-version>
-        <g-leaflet-draw-version>0.4.15</g-leaflet-draw-version>
+        <v-leaflet-version>1.1.0</v-leaflet-version>
+        <g-leaflet-draw-version>1.1.0</g-leaflet-draw-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <geotools.version>10.2</geotools.version>
+        <geotools.version>20.2</geotools.version>
     </properties>
 
     <organization>
@@ -122,7 +122,7 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <skip>${skipTests}</skip>
+                            <!--<skip>${skipTests}</skip>-->
                         </configuration>
                     </execution>
                 </executions>
@@ -331,6 +331,13 @@
             <artifactId>vaadin-client</artifactId>
             <version>${vaadin.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.locationtech.jts</groupId>
+            <artifactId>jts-core</artifactId>
+            <version>1.16.1</version>
+            <scope>compile</scope>
         </dependency>
         
         <dependency>
